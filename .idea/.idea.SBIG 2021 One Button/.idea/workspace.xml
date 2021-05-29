@@ -2,7 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ab7317d1-22e9-48ac-9535-d662808939c9" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/Fighters/Fighter.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/Fighters/Fighter.prefab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Fighter/ActionInput.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Fighter/ActionInput.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Fighter/FighterScript.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Fighter/IGiveInputs.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Fighter/IGiveInputs.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SBIG 2021 One Button/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SBIG 2021 One Button/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/Fighters/fighter controller.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/Fighters/fighter controller.controller" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -11,6 +17,13 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <changedPaths>
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/Fighter/FighterScript.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/Fighter/ActionInput.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/Fighter/IGiveInputs.cs" />
+    </changedPaths>
   </component>
   <component name="ProjectId" id="1tDZqTTusv6hm7qP15AfkYMUvVZ" />
   <component name="ProjectViewState">
@@ -23,6 +36,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Attach to Unity Editor &amp; Play" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
@@ -46,17 +60,35 @@
       <method v="2" />
     </configuration>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
+      <changelist id="ab7317d1-22e9-48ac-9535-d662808939c9" name="Default Changelist" comment="" />
       <created>1622305813380</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1622305813380</updated>
       <workItem from="1622305820880" duration="11000" />
+      <workItem from="1622326360395" duration="783000" />
     </task>
     <servers />
   </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="EditMode" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
