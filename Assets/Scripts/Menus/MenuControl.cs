@@ -9,8 +9,7 @@ public class MenuControl : MonoBehaviour
 {
     [SerializeField]
     private TMP_InputField m_HostIpInput;
-
-    [SerializeField]
+    
     private string m_LobbySceneName = "TheLobby";
 
     public void StartLocalGame()

@@ -75,13 +75,7 @@ namespace Game
 
         public NetworkVariableBool isGameOver { get; } = new NetworkVariableBool(false);
 
-        public NetworkVariable<ISet<ThrustEnum>> AllThrusts = new NetworkVariable<ISet<ThrustEnum>>(
-            new NetworkVariableSettings
-            {
-                ReadPermission = NetworkVariablePermission.ServerOnly,
-                WritePermission = NetworkVariablePermission.ServerOnly
-            },
-            new HashSet<ThrustEnum>());
+        
 
         public NetworkVariableInt Score = new NetworkVariableInt(new NetworkVariableSettings
         {
@@ -100,7 +94,19 @@ namespace Game
         public int DEFAULT_HITPOINTS;
 
         private int localHitpoints;
+        
+        /*
+        public NetworkVariable<ISet<ThrustEnum>> AllThrusts = new NetworkVariable<ISet<ThrustEnum>>(
+            new NetworkVariableSettings
+            {
+                ReadPermission = NetworkVariablePermission.ServerOnly,
+                WritePermission = NetworkVariablePermission.ServerOnly
+            },
+            new HashSet<ThrustEnum>());
+            */
+        private HashSet<ThrustEnum> allThrusts = new HashSet<ThrustEnum>();
 
+        /*
         public NetworkVariable<IDictionary<ThrustEnum, ClientManager>> Clients =
             new NetworkVariable<IDictionary<ThrustEnum, ClientManager>>(
                 new NetworkVariableSettings
@@ -109,6 +115,9 @@ namespace Game
                     WritePermission = NetworkVariablePermission.ServerOnly
                 },
                 new Dictionary<ThrustEnum, ClientManager>());
+                */
+
+        private Dictionary<ThrustEnum, ClientManager> clients = new Dictionary<ThrustEnum, ClientManager>();
 
         /// <summary>
         ///     Awake
@@ -353,9 +362,9 @@ namespace Game
                 return;
             }
 
-            ThrustEnum giveThis = RandomUtilities.RandomElement<ThrustEnum>(AllThrusts.Value);
-            AllThrusts.Value.Remove(giveThis);
-            Clients.Value.Add(giveThis, theClient);
+            ThrustEnum giveThis = RandomUtilities.RandomElement<ThrustEnum>(allThrusts);
+            allThrusts.Remove(giveThis);
+            clients.Add(giveThis, theClient);
             theClient.Thruster.Value = giveThis;
 
         }
@@ -368,8 +377,8 @@ namespace Game
             }
 
             ThrustEnum yeetThis = theClient.Thruster.Value;
-            AllThrusts.Value.Add(yeetThis);
-            Clients.Value.Remove(yeetThis);
+            allThrusts.Add(yeetThis);
+            clients.Remove(yeetThis);
 
         }
 

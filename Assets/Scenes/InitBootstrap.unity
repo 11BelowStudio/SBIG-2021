@@ -168,17 +168,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MessageBufferSize: 5120
-  MaxConnections: 100
+  MaxConnections: 4
   MaxSentMessageQueueSize: 128
   ConnectAddress: 127.0.0.1
-  ConnectPort: 7777
-  ServerListenPort: 7777
-  ServerWebsocketListenPort: 8887
+  ConnectPort: 7778
+  ServerListenPort: 7778
+  ServerWebsocketListenPort: 8889
   SupportWebsocket: 0
   Channels: []
   UseMLAPIRelay: 0
   MLAPIRelayAddress: 184.72.104.138
-  MLAPIRelayPort: 8888
+  MLAPIRelayPort: 8890
   MessageSendMode: 0
 --- !u!114 &880588472
 MonoBehaviour:

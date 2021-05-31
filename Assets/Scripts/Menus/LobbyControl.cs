@@ -97,8 +97,8 @@ public class LobbyControl : NetworkBehaviour
     /// </summary>
     private void UpdateAndCheckPlayersInLobby()
     {
-        //This is game preference, but I am assuming at least 2 players?
-        m_AllPlayersInLobby = m_ClientsInLobby.Count == 4;
+        m_AllPlayersInLobby = m_ClientsInLobby.Count > 0;
+        //m_AllPlayersInLobby = m_ClientsInLobby.Count == 4;
 
         foreach (var clientLobbyStatus in m_ClientsInLobby)
         {
