@@ -2,7 +2,38 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ab7317d1-22e9-48ac-9535-d662808939c9" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/ClientManager.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/ClientManager.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/GameController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/GameController.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ClientShipStuff.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ClientShipStuff.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ServerSpaceship.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ServerSpaceship.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ShipManager.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ShipManager.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/SpaceRock.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/SpaceRock/NetworkedSpaceRock.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/SpaceRock/NetworkedSpaceRock.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Spawner.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Spawner.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/ThrustEnum.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/ThrustEnum.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Utilities.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Utilities/Protocol.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Utilities/Protocol.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Utilities/RandomUtilities.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Utilities/RandomUtilities.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Utilities/SceneTransitionHandler.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SBIG 2021 One Button/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SBIG 2021 One Button/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Standard Assets/Prototyping/Materials/YellowSmooth.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Standard Assets/Prototyping/Materials/YellowSmooth.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,11 +43,31 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock://D:/Unity Projects/SBIG 2021/SBIG 2021 One Button/Assets/Scripts/Game/Ship/SpaceshipScript.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
       <option value="$PROJECT_DIR$/Assets/Scripts/Game/Fighter/FighterScript.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Game/Fighter/ActionInput.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Game/Fighter/IGiveInputs.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/Ship/SpaceshipScript.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ClientCommand.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/SpaceRock/LinearMovementScript.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/SpaceRock/NetworkedLinearMovementScript.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Protocol.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Utilities/Protocol.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Shared/Data/GameDataSource.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/ThrustEnum.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/Spawner.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/GameManager.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/SpaceRock/NetworkedSpaceRock.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ServerSpaceship.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ClientShipStuff.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Utilities/RandomUtilities.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/GameController.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/ClientManager.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ShipManager.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1tDZqTTusv6hm7qP15AfkYMUvVZ" />
@@ -65,6 +116,9 @@
       <workItem from="1622305820880" duration="11000" />
       <workItem from="1622326360395" duration="783000" />
       <workItem from="1622327881865" duration="672000" />
+      <workItem from="1622371287161" duration="973000" />
+      <workItem from="1622385900554" duration="1622000" />
+      <workItem from="1622455248285" duration="21866000" />
     </task>
     <servers />
   </component>
