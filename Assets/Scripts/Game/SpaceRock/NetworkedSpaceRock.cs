@@ -13,11 +13,9 @@ namespace Game.SpaceRock
     {
         private NetworkObjectPool spaceRockPool;
 
-        private GameController gameManager;
+        private GameController gameController;
 
-        public static int SpaceRockCount = 0;
-        
-        private static readonly string OBJECT_POOL_TAG = "NetworkObjectPool";
+        private static readonly string OBJECT_POOL_TAG = "GameController";
         
         private NetworkVariable<Rigidbody> Rigid = new NetworkVariable<Rigidbody>(new NetworkVariableSettings
         {
@@ -52,18 +50,14 @@ namespace Game.SpaceRock
             Assert.IsNotNull(spaceRockPool);
             
             zRange = maxZSpeed - minZSpeed;
-            gameManager = GameObject.FindWithTag("GameController").GetComponent<GameController>();
+            gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
         }
 
-        private void Start()
-        {
-            SpaceRockCount += 1;
-
-        }
+        
 
         public override void NetworkStart()
         {
-
+            
             if (IsServer)
             {
 
@@ -92,6 +86,35 @@ namespace Game.SpaceRock
             }
         }
 
+        /// <summary>
+        /// Called when this has been made from the pool
+        /// </summary>
+        /// <param name="startPosition">The vector3 start position for this object</param>
+        public void CreatedFromPool(Vector3 startPosition)
+        {
+            Assert.IsTrue(IsServer);
+            
+            Rigid.Value.MovePosition(startPosition);
+            
+            Rigid.Value.AddForce(0f,0f,-((Random.value * zRange) + minZSpeed));
+
+            float radialDist = (Random.value + 1)/2; //between 0.5 and 1
+            float polarAngle = ((Random.value * 2)-1) * 360 * Mathf.Deg2Rad; //between +180 and -180 degrees (converted to radians)
+            float azimuthalAngle = ((Random.value * 2) - 1) * 360 * Mathf.Deg2Rad; //between +180 and -180 degrees (converted to radians)
+
+            //converts the spherical coordinate stuff into cartesian
+
+            Rigid.Value.angularVelocity = new Vector3(
+                radialDist * Mathf.Sin(polarAngle) * Mathf.Cos(azimuthalAngle),
+                radialDist * Mathf.Cos(polarAngle) * Mathf.Sin(azimuthalAngle),
+                radialDist * Mathf.Cos(polarAngle)
+            );
+
+            Position.Value = Rigid.Value.position;
+
+            Rotation.Value = Rigid.Value.rotation;
+        }
+
         public void FixedUpdate()
         {
             if (IsServer)
@@ -99,7 +122,7 @@ namespace Game.SpaceRock
 
                 if (Rigid.Value.position.z <= -3)
                 {
-                    Yeet();
+                    Yeet(true);
                 }
                 
                 Position.Value = Rigid.Value.position;
@@ -121,18 +144,22 @@ namespace Game.SpaceRock
             }
             if (other.tag.Equals("Player"))
             {
-                gameManager.ShipHit();
-                Yeet();
+                gameController.ShipHit();
+                Yeet(false);
             }
         }
 
-        private void Yeet()
+        private void Yeet(bool avoided)
         {
             Assert.IsTrue(NetworkManager.IsServer);
+
+            if (avoided)
+            {
+                gameController.GainedPoint(); // score an point if this is despawning because it was avoided
+            }
             
             NetworkObject.Despawn();
             spaceRockPool.ReturnNetworkObject(NetworkObject);
-            SpaceRockCount -= 1;
         }
     }
 }

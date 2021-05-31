@@ -3,6 +3,7 @@ using MLAPI;
 using MLAPI.NetworkVariable;
 using System.Collections;
 using System.Collections.Generic;
+using MLAPI.Messaging;
 
 
 namespace Game.Ship
@@ -21,14 +22,42 @@ namespace Game.Ship
             ReadPermission = NetworkVariablePermission.Everyone
         });
 
-        public override void NetworkStart()
+        public void Start()
         {
             
         }
 
+        public override void NetworkStart()
+        {
+            Spaceship.Value = FindObjectOfType<ServerSpaceship>();
+        }
+
         public void Update()
         {
+            if (IsServer)
+            {
+                UpdateServer();    
+            }
+
+            if (IsClient)
+            {
+                UpdateClient();
+            }
+        }
+
+        private void UpdateServer()
+        {
             
+        }
+
+        private void UpdateClient()
+        {
+        }
+
+        [ServerRpc]
+        public void ThrustRequestServerRpc(ThrustEnum t)
+        {
+            Spaceship.Value.ApplyThrust(t);
         }
         
         

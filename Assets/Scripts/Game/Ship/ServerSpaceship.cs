@@ -43,7 +43,7 @@ namespace Game.Ship
         {
             WritePermission = NetworkVariablePermission.ServerOnly,
             ReadPermission = NetworkVariablePermission.Everyone
-        });
+        }, Quaternion.LookRotation(new Vector3(0,0,1)).normalized );
 
         
         private Vector2 currentThrust;
@@ -185,7 +185,7 @@ namespace Game.Ship
             else
             {
                 rb.MovePosition(Position.Value);
-                rb.MoveRotation(Rotation.Value);
+                rb.MoveRotation(Rotation.Value.normalized);
             }
 
         }

@@ -1,16 +1,17 @@
 ﻿using System;
 using MLAPI;
 using MLAPI.Transports.UNET;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MenuControl : MonoBehaviour
 {
     [SerializeField]
-    private Text m_HostIpInput;
+    private TMP_InputField m_HostIpInput;
 
     [SerializeField]
-    private string m_LobbySceneName = "InvadersLobby";
+    private string m_LobbySceneName = "TheLobby";
 
     public void StartLocalGame()
     {

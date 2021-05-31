@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using MLAPI;
 using MLAPI.Messaging;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,8 +13,8 @@ public class LobbyControl : NetworkBehaviour
     public static bool isHosting;
 
     [SerializeField]
-    private string m_InGameSceneName = "InGame";
-    public Text LobbyText;
+    private string m_InGameSceneName = "GameScene";
+    public TextMeshProUGUI LobbyText;
     private bool m_AllPlayersInLobby;
 
     private Dictionary<ulong, bool> m_ClientsInLobby;
@@ -28,9 +30,14 @@ public class LobbyControl : NetworkBehaviour
 
         //We added this information to tell us if we are going to host a game or join an the game session
         if (isHosting)
+        {
             NetworkManager.Singleton.StartHost(); //Spin up the host
+            NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
+        }
         else
+        {
             NetworkManager.Singleton.StartClient(); //Spin up the client
+        }
 
         if (NetworkManager.Singleton.IsListening)
         {
@@ -53,6 +60,12 @@ public class LobbyControl : NetworkBehaviour
         }
 
         SceneTransitionHandler.sceneTransitionHandler.SetSceneState(SceneTransitionHandler.SceneStates.Lobby);
+    }
+
+    private void ApprovalCheck(byte[] connectionData, ulong clientId, MLAPI.NetworkManager.ConnectionApprovedDelegate callback)
+    {
+        bool canIConnect = (m_ClientsInLobby.Count < 4);
+        callback(canIConnect, null, canIConnect, null, null);
     }
 
     private void OnGUI()
@@ -80,12 +93,12 @@ public class LobbyControl : NetworkBehaviour
 
     /// <summary>
     ///     UpdateAndCheckPlayersInLobby
-    ///     Checks to see if we have at least 2 or more people to start
+    ///     Checks to see if we have 4 people to start
     /// </summary>
     private void UpdateAndCheckPlayersInLobby()
     {
         //This is game preference, but I am assuming at least 2 players?
-        m_AllPlayersInLobby = m_ClientsInLobby.Count > 1;
+        m_AllPlayersInLobby = m_ClientsInLobby.Count == 4;
 
         foreach (var clientLobbyStatus in m_ClientsInLobby)
         {
@@ -110,6 +123,10 @@ public class LobbyControl : NetworkBehaviour
         {
             if (!m_ClientsInLobby.ContainsKey(clientId))
             {
+                if (m_ClientsInLobby.Count == 4)
+                {
+                    
+                }
                 m_ClientsInLobby.Add(clientId, false);
                 GenerateUserStatsForLobby();
             }
