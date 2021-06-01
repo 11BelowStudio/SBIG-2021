@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8264517492478783378}
   - component: {fileID: 7033805357057298807}
   - component: {fileID: 2699543562704384561}
+  - component: {fileID: 3152753110815222889}
   - component: {fileID: 6696899827814021267}
   m_Layer: 0
   m_Name: SpaceRock
@@ -29,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3332950033486320138}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -113,6 +114,24 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &3152753110815222889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3332950033486320138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d24a913dd854484822f079f8c1432b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Position:
+    m_InternalValue: {x: 0, y: 0, z: 20}
+  Rotation:
+    m_InternalValue: {x: 0, y: 0, z: 0, w: 0}
+  minZSpeed: 100
+  maxZSpeed: 500
 --- !u!114 &6696899827814021267
 MonoBehaviour:
   m_ObjectHideFlags: 0

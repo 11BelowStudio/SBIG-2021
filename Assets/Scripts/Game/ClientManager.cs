@@ -62,7 +62,7 @@ namespace Game
             currentSceneState = newState;
             if (currentSceneState == SceneTransitionHandler.SceneStates.Ingame)
             {
-                gc = GameController.Singleton;
+                //gc = GameController.Singleton;
                 sm = FindObjectOfType<ShipManager>();
                 //if (m_PlayerVisual != null) m_PlayerVisual.material.color = Color.green;
             }
@@ -108,8 +108,10 @@ namespace Game
 
         private void SubscribeToDelegatesAndUpdateValues()
         {
-            GameController.Singleton.hasGameStarted.OnValueChanged += OnGameStartedChanged;
-            GameController.Singleton.isGameOver.OnValueChanged += OnGameStartedChanged;
+            gc = GameController.Singleton;
+            gc.AddPlayer(this);
+            gc.hasGameStarted.OnValueChanged += OnGameStartedChanged;
+            gc.isGameOver.OnValueChanged += OnGameStartedChanged;
         }
 
 

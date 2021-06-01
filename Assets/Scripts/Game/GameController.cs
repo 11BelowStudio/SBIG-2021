@@ -6,6 +6,7 @@ using Game.SpaceRock;
 using MLAPI;
 using MLAPI.Extensions;
 using MLAPI.NetworkVariable;
+using MLAPI.NetworkVariable.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -26,7 +27,7 @@ namespace Game
 
         [Header("Spawner stuff")]
         [SerializeField]
-        private NetworkObjectPool theObjectPool;
+        public NetworkObjectPool theObjectPool;
         [SerializeField]
         private GameObject SpaceRockPrefab;
         public float spawnerRadius;
@@ -42,7 +43,7 @@ namespace Game
         public float maxWaveDelay;
         
         
-        
+        [Header("Other stuff")]
         [SerializeField]
         [Tooltip("Time Remaining until the game starts")]
         private float m_DelayedStartTime = 5.0f;
@@ -67,7 +68,7 @@ namespace Game
         private NetworkVariableFloat m_ReplicatedTimeRemaining = new NetworkVariableFloat();
         private GameObject m_Saucer;
         
-        private List<NetworkedSpaceRock> spaceRocks = new List<NetworkedSpaceRock>();
+        //private List<NetworkedSpaceRock> spaceRocks = new List<NetworkedSpaceRock>();
 
         public static GameController Singleton { get; private set; }
 
@@ -104,18 +105,17 @@ namespace Game
             },
             new HashSet<ThrustEnum>());
             */
-        private HashSet<ThrustEnum> allThrusts = new HashSet<ThrustEnum>();
+        private HashSet<ThrustEnum> allThrusts = new HashSet<ThrustEnum>((ThrustEnum[]) Enum.GetValues(typeof(ThrustEnum)));
 
-        /*
-        public NetworkVariable<IDictionary<ThrustEnum, ClientManager>> Clients =
-            new NetworkVariable<IDictionary<ThrustEnum, ClientManager>>(
+        
+        public NetworkDictionary<ThrustEnum, ClientManager> Clients =
+            new NetworkDictionary<ThrustEnum, ClientManager>(
                 new NetworkVariableSettings
                 {
                     ReadPermission = NetworkVariablePermission.Everyone,
                     WritePermission = NetworkVariablePermission.ServerOnly
                 },
                 new Dictionary<ThrustEnum, ClientManager>());
-                */
 
         private Dictionary<ThrustEnum, ClientManager> clients = new Dictionary<ThrustEnum, ClientManager>();
 
@@ -216,6 +216,32 @@ namespace Game
         }
         internal static event Action OnSingletonReady;
         
+        
+        /// <summary>
+        ///     Update
+        ///     MonoBehaviour Update method
+        /// </summary>
+        private void Update()
+        {
+            //Is the game over?
+            if (IsCurrentGameOver())
+            {
+                return;
+            }
+
+            //Update game timer (if the game hasn't started)
+            UpdateGameTimer();
+
+            //If we are a connected client, then don't update the enemies (server side only)
+            if (!IsServer)
+            {
+                return;
+            }
+
+            //If we are the server and the game has started, then update the enemies
+            //if (HasGameStarted()) UpdateEnemies();
+        }
+        
         /// <summary>
         ///     ShouldStartCountDown
         ///     Determines when the countdown should start
@@ -313,6 +339,7 @@ namespace Game
         private void OnGameStarted()
         {
             Assert.IsTrue(IsServer);
+            hasGameStarted.Value = true;
             timerText.gameObject.SetActive(false);
             
             Hitpoints.Value = DEFAULT_HITPOINTS;
@@ -328,18 +355,24 @@ namespace Game
         /// <returns></returns>
         private IEnumerable WaveSpawnerCoroutine()
         {
-            while(IsCurrentGameOver())
+            while(!IsCurrentGameOver())
             {
                 int currentWaveSize = Random.Range(minWaveSize, maxWaveSize);
+                Debug.Log(currentWaveSize);
                 for (int i = 0; i < currentWaveSize; i++)
                 {
                     GameObject theNewSpaceRock = theObjectPool.GetNetworkObject(SpaceRockPrefab);
 
-                    Vector2 randomPos2D = Random.insideUnitCircle * spawnerRadius;
+                    //Vector3 randomSphere = Random.insideUnitSphere * spawnerRadius;
 
-                    Vector3 randomPos3D = new Vector3(randomPos2D.x, randomPos2D.y, spawnerZPosition);
+                    //randomSphere += new Vector3(0, 0, spawnerZPosition);
 
-                    theNewSpaceRock.GetComponent<NetworkedSpaceRock>().CreatedFromPool(randomPos3D);
+                    //Vector2 randomPos2D = Random.insideUnitCircle * spawnerRadius;
+
+                    // randomPos3D = new Vector3(randomPos2D.x, randomPos2D.y, spawnerZPosition);
+
+                    //theNewSpaceRock.GetComponent<NetworkedSpaceRock>().CreatedFromPool(randomPos3D);
+                    theNewSpaceRock.GetComponent<NetworkedSpaceRock>().CreatedFromPool(spawnerZPosition, spawnerRadius);
                     
                     theNewSpaceRock.GetComponent<NetworkObject>().Spawn(null, true);
 
@@ -364,7 +397,7 @@ namespace Game
 
             ThrustEnum giveThis = RandomUtilities.RandomElement<ThrustEnum>(allThrusts);
             allThrusts.Remove(giveThis);
-            clients.Add(giveThis, theClient);
+            Clients.Add(giveThis, theClient);
             theClient.Thruster.Value = giveThis;
 
         }
@@ -378,7 +411,9 @@ namespace Game
 
             ThrustEnum yeetThis = theClient.Thruster.Value;
             allThrusts.Add(yeetThis);
-            clients.Remove(yeetThis);
+            Clients.Remove(yeetThis);
+            
+            
 
         }
 
