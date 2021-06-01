@@ -86,11 +86,15 @@ namespace Game
 
         private int localScore = 0;
 
+        private bool updateTheScore = false;
+
         public NetworkVariableInt Hitpoints = new NetworkVariableInt(new NetworkVariableSettings
         {
             ReadPermission = NetworkVariablePermission.Everyone,
             WritePermission = NetworkVariablePermission.ServerOnly
         });
+
+        private bool updateTheHitpoints = false;
 
         public int DEFAULT_HITPOINTS;
 
@@ -129,6 +133,9 @@ namespace Game
             Singleton = this;
             OnSingletonReady?.Invoke();
 
+            updateTheHitpoints = true;
+            updateTheScore = true;
+    
             if (IsServer)
             {
                 hasGameStarted.Value = false;
@@ -148,7 +155,7 @@ namespace Game
         
         public override void NetworkStart()
         {
-            if (IsClient && !IsServer)
+            if (IsClient)
             {
                 m_ClientGameOver = false;
                 m_ClientStartCountdown = false;
@@ -194,16 +201,19 @@ namespace Game
                 Score.OnValueChanged += (oldValue, newValue) =>
                 {
                     localScore = newValue;
-                    scoreText.SetText($"Score:\n{newValue}");
+                    scoreText.SetText($"Score:\n{localScore}");
                 };
 
                 Hitpoints.OnValueChanged += (oldValue, newValue) =>
                 {
                     localHitpoints = newValue;
-                    hitpointsText.SetText($"Hitpoints:\n{newValue}");
+                    hitpointsText.SetText($"Hitpoints:\n{localHitpoints}");
                     if (newValue == 0)
                     {
-                        isGameOver.Value = true;
+                        if (IsServer)
+                        {
+                            isGameOver.Value = true;
+                        }
                     }
                 };
             }
@@ -230,7 +240,32 @@ namespace Game
             }
 
             //Update game timer (if the game hasn't started)
-            UpdateGameTimer();
+            if (m_ClientGameStarted)
+            {
+                hitpointsText.SetText($"Hitpoints:\n{Hitpoints.Value}");
+                scoreText.SetText($"Score:\n{Score.Value}");
+            }
+            else
+            {
+                UpdateGameTimer();
+            }
+
+            //hitpointsText.SetText($"Hitpoints:\n{Hitpoints.Value}");
+            //scoreText.SetText($"Score:\n{Score.Value}");
+
+            /*
+            if (updateTheHitpoints)
+            {
+                hitpointsText.SetText($"Hitpoints:\n{localHitpoints}");
+                updateTheHitpoints = false;
+            }
+
+            if (updateTheScore)
+            {
+                scoreText.SetText($"Score:\n{localScore}");
+                updateTheScore = false;
+            }
+            */
 
             //If we are a connected client, then don't update the enemies (server side only)
             if (!IsServer)
@@ -358,7 +393,7 @@ namespace Game
             while(!IsCurrentGameOver())
             {
                 int currentWaveSize = Random.Range(minWaveSize, maxWaveSize);
-                Debug.Log(currentWaveSize);
+                //Debug.Log(currentWaveSize);
                 for (int i = 0; i < currentWaveSize; i++)
                 {
                     GameObject theNewSpaceRock = theObjectPool.GetNetworkObject(SpaceRockPrefab);
@@ -395,10 +430,27 @@ namespace Game
                 return;
             }
 
-            ThrustEnum giveThis = RandomUtilities.RandomElement<ThrustEnum>(allThrusts);
-            allThrusts.Remove(giveThis);
-            Clients.Add(giveThis, theClient);
-            theClient.Thruster.Value = giveThis;
+            //ThrustEnum useThis = ThrustEnum.UP_THRUSTER;
+
+            //bool foundOne = false;
+            
+            foreach (ThrustEnum t in Enum.GetValues(typeof(ThrustEnum)))
+            {
+                if (!Clients.ContainsKey(t))
+                {
+                    Clients.Add(t, theClient);
+                    theClient.Thruster.Value = t;
+                    break;
+                }
+            }
+            
+            
+
+            //ThrustEnum giveThis = RandomUtilities.RandomElement<ThrustEnum>(allThrusts);
+            //allThrusts.Remove(giveThis);
+            //Clients.Add(thisOne, theClient);
+            //Debug.Log(thisOne.ToString());
+            //theClient.Thruster.Value = thisOne;
 
         }
 
@@ -440,7 +492,6 @@ namespace Game
 
         public void GameOver()
         {
-            Assert.IsTrue(NetworkManager.Singleton.IsServer);
             hitpointsText.SetText("DED");
             gameOverText.gameObject.SetActive(true);
             
@@ -450,6 +501,13 @@ namespace Game
         public void DisplayGameOverText(string message)
         {
 
+        }
+        
+        public void ExitGame()
+        {
+            if (IsServer) NetworkManager.Singleton.StopServer();
+            if (IsClient) NetworkManager.Singleton.StopClient();
+            SceneTransitionHandler.sceneTransitionHandler.ExitAndLoadStartMenu();
         }
         
     }

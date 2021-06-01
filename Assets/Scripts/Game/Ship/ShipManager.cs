@@ -57,7 +57,13 @@ namespace Game.Ship
         [ServerRpc]
         public void ThrustRequestServerRpc(ThrustEnum t)
         {
-            Spaceship.Value.ApplyThrust(t);
+            Spaceship.Value.ApplyThrustToShipServerRPC(t);
+        }
+
+        [ServerRpc]
+        public void ThrustStopRequestServerRPC(ThrustEnum t)
+        {
+            Spaceship.Value.RemoveThrustFromShipServerRPC(t);
         }
         
         

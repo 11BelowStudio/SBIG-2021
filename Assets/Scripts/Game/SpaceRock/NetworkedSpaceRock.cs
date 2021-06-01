@@ -91,8 +91,8 @@ namespace Game.SpaceRock
             }
             else
             {
-                rb.MovePosition(Rigid.Value.position);
-                rb.MoveRotation(Rigid.Value.rotation);
+                rb.position = Position.Value;
+                rb.rotation = Rotation.Value;
             }
         }
 
@@ -133,11 +133,11 @@ namespace Game.SpaceRock
 
             Vector3 startPos = Random.insideUnitSphere * startRadius;
 
-            Debug.Log($"Initial start: {startPos}");
+            //Debug.Log($"Initial start: {startPos}");
             
             startPos += new Vector3(0, 0, startZ);
             
-            Debug.Log($"Moved start: {startPos}");
+            //Debug.Log($"Moved start: {startPos}");
             
             transform.position = startPos;
             
@@ -182,8 +182,8 @@ namespace Game.SpaceRock
             }
             else
             {
-                rb.MovePosition(Rigid.Value.position);
-                rb.MoveRotation(Rigid.Value.rotation);
+                rb.MovePosition(Position.Value);
+                rb.MoveRotation(Rotation.Value);
             }
         }
 

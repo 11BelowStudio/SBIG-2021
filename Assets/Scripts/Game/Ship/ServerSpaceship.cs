@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MLAPI;
+using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
 using UnityEngine;
 
@@ -66,14 +67,16 @@ namespace Game.Ship
             currentThrust = Vector2.zero;
         }
 
-        public void ApplyThrust(ThrustEnum t)
+        [ServerRpc]
+        public void ApplyThrustToShipServerRPC(ThrustEnum t)
         {
-            if (!IsServer)
-            {
-                return;
-            }
-
             currentThrusts.Add(t);
+        }
+        
+        [ServerRpc]
+        public void RemoveThrustFromShipServerRPC(ThrustEnum t)
+        {
+            currentThrusts.Remove(t);
         }
 
         
@@ -92,7 +95,7 @@ namespace Game.Ship
                 addThrust += ThrustEnumUtilities.ThrustEnumToVector2(t);
             }
 
-            currentThrusts.Clear();
+            
 
 
             if (addThrust.magnitude > 1)

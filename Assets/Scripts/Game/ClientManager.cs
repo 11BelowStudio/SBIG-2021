@@ -24,6 +24,8 @@ namespace Game
         private ClientRpcParams ownerRpcParams;
 
         private bool hasGameStarted;
+
+        private bool isGameOver;
         
         public void Start()
         {
@@ -41,7 +43,7 @@ namespace Game
 
             if (GameController.Singleton)
             {
-                GameController.Singleton.isGameOver.OnValueChanged -= OnGameStartedChanged;
+                GameController.Singleton.isGameOver.OnValueChanged -= OnGameOverChanged;
                 GameController.Singleton.hasGameStarted.OnValueChanged -= OnGameStartedChanged;
             }
         }
@@ -111,7 +113,7 @@ namespace Game
             gc = GameController.Singleton;
             gc.AddPlayer(this);
             gc.hasGameStarted.OnValueChanged += OnGameStartedChanged;
-            gc.isGameOver.OnValueChanged += OnGameStartedChanged;
+            gc.isGameOver.OnValueChanged += OnGameOverChanged;
         }
 
 
@@ -121,8 +123,26 @@ namespace Game
             hasGameStarted = newValue;
         }
         
+        private void OnGameOverChanged(bool previousValue, bool newValue)
+        {
+            isGameOver = newValue;
+        }
+
         public void Update()
         {
+
+            switch (currentSceneState)
+            {
+                case SceneTransitionHandler.SceneStates.Ingame:
+                {
+                    InGameUpdate();
+                    break;
+                }
+            }
+        }
+        private void InGameUpdate()
+        {
+
             if (IsServer)
             {
                 UpdateServer();    
@@ -141,20 +161,43 @@ namespace Game
 
         private void UpdateClient()
         {
-            if (!IsLocalPlayer)
-            {
-                return;
-            }
+            if (!IsLocalPlayer || !IsOwner || !hasGameStarted) return;
 
-            if (hasGameStarted && (Input.anyKey || Input.GetButton("Jump")))
+            if (Input.GetButtonDown("Jump"))
             {
-                RequestThrust();
+                if (isGameOver)
+                {
+                    //TODO: quit
+                    gc.ExitGame();
+                }
+                else if (hasGameStarted)
+                {
+                    RequestThrustServerRPC();
+                }
             }
+            else if (Input.GetButtonUp("Jump"))
+            {
+                RequestStopThrustServerRPC();
+            }
+            
+            
+
         }
 
-        private void RequestThrust()
+        [ServerRpc]
+        private void RequestThrustServerRPC()
         {
+            //Debug.Log($"Requesting {Thruster.Value.ToString()} thrust!");
             sm.ThrustRequestServerRpc(Thruster.Value);
+        }
+        
+        [ServerRpc]
+        private void RequestStopThrustServerRPC()
+        {
+            if (!isGameOver)
+            {
+                sm.ThrustStopRequestServerRPC(Thruster.Value);
+            }
         }
 
         
