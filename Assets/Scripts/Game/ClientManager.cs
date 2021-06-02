@@ -15,7 +15,7 @@ namespace Game
             ReadPermission = NetworkVariablePermission.Everyone
         });
 
-        private GameController gc;
+        public GameController gc;
 
         private ShipManager sm;
 
@@ -43,6 +43,7 @@ namespace Game
 
             if (GameController.Singleton)
             {
+                //gc.RemovePlayer(this);
                 GameController.Singleton.isGameOver.OnValueChanged -= OnGameOverChanged;
                 GameController.Singleton.hasGameStarted.OnValueChanged -= OnGameStartedChanged;
             }
@@ -114,6 +115,7 @@ namespace Game
             gc.AddPlayer(this);
             gc.hasGameStarted.OnValueChanged += OnGameStartedChanged;
             gc.isGameOver.OnValueChanged += OnGameOverChanged;
+            GameController.PleaseGoAwayThanks += ForceQuit;
         }
 
 
@@ -161,14 +163,14 @@ namespace Game
 
         private void UpdateClient()
         {
+
             if (!IsLocalPlayer || !IsOwner || !hasGameStarted) return;
 
             if (Input.GetButtonDown("Jump"))
             {
                 if (isGameOver)
                 {
-                    //TODO: quit
-                    gc.ExitGame();
+                    Quit();
                 }
                 else if (hasGameStarted)
                 {
@@ -182,6 +184,20 @@ namespace Game
             
             
 
+        }
+
+        private void Quit()
+        {
+            GameController.PleaseGoAwayThanks -= ForceQuit;
+            gc.ExitGame();
+        }
+
+        private void ForceQuit()
+        {
+            if (!IsServer)
+            {
+                Quit();
+            }
         }
 
         [ServerRpc]
@@ -199,6 +215,17 @@ namespace Game
                 sm.ThrustStopRequestServerRPC(Thruster.Value);
             }
         }
+
+        [ClientRpc]
+        public void FeckOffClientRPC()
+        {
+            if (!IsServer)
+            {
+                gc.ExitGame();
+            }
+        }
+
+ 
 
         
         

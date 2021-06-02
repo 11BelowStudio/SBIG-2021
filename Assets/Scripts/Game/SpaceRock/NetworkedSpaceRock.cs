@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace Game.SpaceRock
 {
-    public class NetworkedSpaceRock: NetworkBehaviour
+    public class NetworkedSpaceRock: NetworkBehaviour, IAmYeetable
     {
         private NetworkObjectPool spaceRockPool;
 
@@ -49,6 +49,12 @@ namespace Game.SpaceRock
 
         private static float zRange;
 
+        private NetworkVariableVector3 ForceToAddEveryFrame = new NetworkVariableVector3(new NetworkVariableSettings
+        {
+            WritePermission = NetworkVariablePermission.ServerOnly,
+            ReadPermission = NetworkVariablePermission.ServerOnly
+        });
+
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
@@ -69,8 +75,14 @@ namespace Game.SpaceRock
             gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
             if (IsServer)
             {
+                
+                float zForce = -((Random.value * zRange) + minZSpeed);
 
-                Rigid.Value.AddForce(0f,0f,-((Random.value * zRange) + minZSpeed));
+                ForceToAddEveryFrame.Value = new Vector3(0f, 0f, zForce);
+                
+                Rigid.Value.AddForce(ForceToAddEveryFrame.Value);
+                
+                //Rigid.Value.AddForce(0f,0f,-((Random.value * zRange) + minZSpeed));
 
                 float radialDist = (Random.value + 1)/2; //between 0.5 and 1
                 float polarAngle = ((Random.value * 2)-1) * 360 * Mathf.Deg2Rad; //between +180 and -180 degrees (converted to radians)
@@ -106,7 +118,13 @@ namespace Game.SpaceRock
             
             Rigid.Value.MovePosition(startPosition);
             
-            Rigid.Value.AddForce(0f,0f,-((Random.value * zRange) + minZSpeed));
+            float zForce = -((Random.value * zRange) + minZSpeed);
+
+            ForceToAddEveryFrame.Value = new Vector3(0f, 0f, zForce);
+                
+            Rigid.Value.AddForce(ForceToAddEveryFrame.Value);
+
+            //Rigid.Value.AddForce(0f,0f,-((Random.value * zRange) + minZSpeed));
 
             float radialDist = (Random.value + 1)/2; //between 0.5 and 1
             float polarAngle = ((Random.value * 2)-1) * 360 * Mathf.Deg2Rad; //between +180 and -180 degrees (converted to radians)
@@ -141,7 +159,13 @@ namespace Game.SpaceRock
             
             transform.position = startPos;
             
-            Rigid.Value.AddForce(0f,0f,-((Random.value * zRange) + minZSpeed));
+            float zForce = -((Random.value * zRange) + minZSpeed);
+
+            ForceToAddEveryFrame.Value = new Vector3(0f, 0f, zForce);
+                
+            Rigid.Value.AddForce(ForceToAddEveryFrame.Value);
+            
+            //Rigid.Value.AddForce(0f,0f,-((Random.value * zRange) + minZSpeed));
 
             float radialDist = (Random.value + 1)/2; //between 0.5 and 1
             float polarAngle = ((Random.value * 2)-1) * 360 * Mathf.Deg2Rad; //between +180 and -180 degrees (converted to radians)
@@ -171,10 +195,12 @@ namespace Game.SpaceRock
             if (IsServer)
             {
 
-                if (Rigid.Value.position.z <= -3)
+                if (Rigid.Value.position.z <= -5)
                 {
                     Yeet(true);
                 }
+                
+                Rigid.Value.AddForce(ForceToAddEveryFrame.Value);
                 
                 Position.Value = Rigid.Value.position;
 
@@ -195,12 +221,20 @@ namespace Game.SpaceRock
             }
             if (other.tag.Equals("Player"))
             {
-                gameController.ShipHit();
-                Yeet(false);
+                gameController.ShipHit(other.ClosestPoint(transform.position));
+                //Yeet(false);
+                foreach (IAmYeetable yeetThisToo in FindObjectsOfType<NetworkedSpaceRock>())
+                {
+                    yeetThisToo.Yeet(false);
+                }
+                foreach (IAmYeetable yeetThisToo in FindObjectsOfType<PointsBox>())
+                {
+                    yeetThisToo.Yeet(false);
+                }
             }
         }
 
-        private void Yeet(bool avoided)
+        public void Yeet(bool avoided)
         {
             Assert.IsTrue(NetworkManager.IsServer);
 
@@ -214,5 +248,7 @@ namespace Game.SpaceRock
             NetworkObject.Despawn();
             spaceRockPool.ReturnNetworkObject(NetworkObject);
         }
+
+        
     }
 }

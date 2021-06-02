@@ -5,6 +5,7 @@ using Game.Ship;
 using Game.SpaceRock;
 using MLAPI;
 using MLAPI.Extensions;
+using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
 using MLAPI.NetworkVariable.Collections;
 using TMPro;
@@ -41,9 +42,22 @@ namespace Game
         public float maxSpawnDelay;
         public float minWaveDelay;
         public float maxWaveDelay;
-        
-        
+
+        [Header("Points box stuff")]
+        [SerializeField]
+        private GameObject pointsBoxPrefab;
+
+        private Coroutine boxSpawner;
+
+        public float minPointsBoxDelay;
+        public float maxPointsBoxDelay;
+
+
+
         [Header("Other stuff")]
+        [SerializeField]
+        private GameObject explosionPrefab;
+        
         [SerializeField]
         [Tooltip("Time Remaining until the game starts")]
         private float m_DelayedStartTime = 5.0f;
@@ -78,7 +92,7 @@ namespace Game
 
         
 
-        public NetworkVariableInt Score = new NetworkVariableInt(new NetworkVariableSettings
+        public NetworkVariableFloat Score = new NetworkVariableFloat(new NetworkVariableSettings
         {
             ReadPermission = NetworkVariablePermission.Everyone,
             WritePermission = NetworkVariablePermission.ServerOnly
@@ -154,6 +168,11 @@ namespace Game
                 //We do a check for the client side value upon instantiating the class (should be zero)
                 Debug.LogFormat("Client side we started with a timer value of {0}", m_ReplicatedTimeRemaining.Value);
             }
+
+            localHitpoints = DEFAULT_HITPOINTS;
+            scoreText.SetText($"Score:\n0");
+            hitpointsText.SetText($"Hitpoints:\n{localHitpoints}");
+            
         }
         
         public override void NetworkStart()
@@ -203,7 +222,7 @@ namespace Game
 
                 Score.OnValueChanged += (oldValue, newValue) =>
                 {
-                    localScore = newValue;
+                    localScore = Mathf.FloorToInt(newValue);
                     scoreText.SetText($"Score:\n{localScore}");
                 };
 
@@ -228,6 +247,8 @@ namespace Game
             base.NetworkStart();
         }
         internal static event Action OnSingletonReady;
+
+        internal static event Action PleaseGoAwayThanks;
         
         
         /// <summary>
@@ -245,8 +266,8 @@ namespace Game
             //Update game timer (if the game hasn't started)
             if (m_ClientGameStarted)
             {
-                hitpointsText.SetText($"Hitpoints:\n{Hitpoints.Value}");
-                scoreText.SetText($"Score:\n{Score.Value}");
+                hitpointsText.SetText($"Hitpoints:\n{localHitpoints}");
+                scoreText.SetText($"Score:\n{localScore}");
             }
             else
             {
@@ -384,6 +405,7 @@ namespace Game
 
             waveSpawner = StartCoroutine(WaveSpawnerCoroutine().GetEnumerator());
 
+            boxSpawner = StartCoroutine(PointsBoxSpawnerCoroutine().GetEnumerator());
 
         }
 
@@ -420,6 +442,27 @@ namespace Game
                 maxWaveSize += 1;
 
                 yield return new WaitForSeconds(Random.Range(minWaveDelay, maxWaveDelay));
+            }
+            yield break;
+        }
+        
+        /// <summary>
+        /// This is the coroutine for the points box spawning stuff
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable PointsBoxSpawnerCoroutine()
+        {
+            while(!IsCurrentGameOver())
+            {
+               
+                GameObject theNewPointsBox = theObjectPool.GetNetworkObject(pointsBoxPrefab);
+
+                   
+                theNewPointsBox.GetComponent<PointsBox>().CreatedFromPool(spawnerZPosition, spawnerRadius);
+                    
+                theNewPointsBox.GetComponent<NetworkObject>().Spawn(null, true);
+
+                yield return new WaitForSeconds(Random.Range(minPointsBoxDelay, maxPointsBoxDelay));
             }
             yield break;
         }
@@ -461,15 +504,21 @@ namespace Game
         {
             if (!NetworkManager.Singleton.IsServer)
             {
+                RemovePlayerServerRPC(theClient.Thruster.Value);
                 return;
             }
 
             ThrustEnum yeetThis = theClient.Thruster.Value;
             allThrusts.Add(yeetThis);
             Clients.Remove(yeetThis);
-            
-            
 
+        }
+
+        [ServerRpc]
+        private void RemovePlayerServerRPC(ThrustEnum yeetThis)
+        {
+            allThrusts.Add(yeetThis);
+            Clients.Remove(yeetThis);
         }
 
         /// <summary>
@@ -482,15 +531,44 @@ namespace Game
             {
                 if (!isGameOver.Value) // if the game isn't over yet
                 {
-                    Score.Value += 1; // score 1 point!
+                    Score.Value += Random.Range(0.125f, 1f); // score 1 point!
                 }
             }
         }
 
-        public void ShipHit()
+        public void HitPointsBox()
+        {
+            Assert.IsTrue(IsServer);
+
+            if (isGameOver.Value)
+            {
+                return;
+            }
+            
+            Score.Value += 3;
+
+        }
+
+        public void ShipHit(Vector3 hitHere)
         {
             Assert.IsTrue(NetworkManager.Singleton.IsServer);
+            if (isGameOver.Value)
+            {
+                return;
+            }
             Hitpoints.Value -= 1;
+
+            foreach (var client in Clients.Values)
+            {
+                client.gc.SpawnExplosionClientRPC(hitHere);
+            }
+            
+        }
+
+        [ClientRpc]
+        public void SpawnExplosionClientRPC(Vector3 explosionPosition)
+        {
+            Instantiate(explosionPrefab, explosionPosition, transform.rotation);
         }
 
         public void GameOver()
@@ -508,10 +586,20 @@ namespace Game
         
         public void ExitGame()
         {
-            if (IsServer) NetworkManager.Singleton.StopServer();
-            if (IsClient) NetworkManager.Singleton.StopClient();
+            if (IsServer)
+            {
+                PleaseGoAwayThanks?.Invoke();
+                NetworkManager.Singleton.StopServer();
+            }
+
+            if (IsClient)
+            {
+                NetworkManager.Singleton.StopClient();
+            }
+
             SceneTransitionHandler.sceneTransitionHandler.ExitAndLoadStartMenu();
         }
+        
         
     }
     

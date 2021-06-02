@@ -2,8 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ab7317d1-22e9-48ac-9535-d662808939c9" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/IAmYeetable.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/IAmYeetable.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/PointsBox.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/PointsBox.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Utilities/DestroyByTime.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Utilities/DestroyByTime.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SBIG 2021 One Button/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SBIG 2021 One Button/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/GameController.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/GameController.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/NetworkObjectPool.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/NetworkObjectPool.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/ServerShip.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/ServerShip.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ServerSpaceship.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ServerSpaceship.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/Space Rock/Materials/Inconvenient Space Rock!.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/Space Rock/Materials/Inconvenient Space Rock!.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/SpaceRock.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/SpaceRock.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/MyAssets/NetworkManager.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/NetworkManager.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/MyAssets/Textures/Orange.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/Textures/Orange.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/ClientManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/ClientManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/GameController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/GameController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/SpaceRock/NetworkedSpaceRock.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/SpaceRock/NetworkedSpaceRock.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Utilities/Protocol.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Utilities/Protocol.cs.meta" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,13 +41,14 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.multiplayer.mlapi@0.1.0/Runtime/SceneManagement/NetworkSceneManager.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.mlapi.contrib.extensions@1bb825941d/Runtime/NetworkObjectPool/NetworkObjectPool.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.multiplayer.mlapi@0.1.0/Runtime/Profiling/ProfilerCountersInfo.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.multiplayer.mlapi@0.1.0/Runtime/Core/NetworkBehaviour.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.multiplayer.mlapi@0.1.0/Runtime/Core/NetworkObject.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.multiplayer.mlapi@0.1.0/Runtime/Logging/NetworkLog.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://D:/Unity Projects/SBIG 2021/SBIG 2021 One Button/Assets/Scripts/Game/Ship/SpaceshipScript.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.multiplayer.mlapi@0.1.0/Runtime/Transports/UNET/RelayTransport.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.multiplayer.mlapi@0.1.0/Runtime/Spawning/NetworkSpawnManager.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.multiplayer.mlapi@0.1.0/Runtime/Profiling/ProfilerCountersInfo.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.multiplayer.mlapi@0.1.0/Runtime/Core/NetworkBehaviour.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.mlapi.contrib.extensions@1bb825941d/Runtime/LagCompensation/TrackedObject.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.multiplayer.mlapi@0.1.0/Runtime/Core/NetworkObject.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.multiplayer.mlapi@0.1.0/Runtime/Serialization/NetworkWriter.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
@@ -54,14 +72,20 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/Menus/LobbyControl.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Menus/GoToBootstrap.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Menus/SceneTransitionHandler.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/Game/SpaceRock/NetworkedSpaceRock.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/Game/ClientManager.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ShipManager.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Game/TunnelPieceMover.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Game/MovingTunnelPiece.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Game/TunnelMovingScript.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/Game/GameController.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ServerSpaceship.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/ICanBeAffectedByExplosions.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/NetworkedExplosion.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/ICanBeYeetedFromTheScene.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/IAmYeetable.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Utilities/DestroyByTime.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/SpaceRock/NetworkedSpaceRock.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/PointsBox.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/GameController.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/ClientManager.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1tDZqTTusv6hm7qP15AfkYMUvVZ" />
@@ -121,7 +145,7 @@
       <workItem from="1622327881865" duration="672000" />
       <workItem from="1622371287161" duration="973000" />
       <workItem from="1622385900554" duration="1622000" />
-      <workItem from="1622455248285" duration="63511000" />
+      <workItem from="1622455248285" duration="76177000" />
     </task>
     <servers />
   </component>
