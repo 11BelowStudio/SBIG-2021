@@ -133,12 +133,15 @@ namespace Game
             Singleton = this;
             OnSingletonReady?.Invoke();
 
-            updateTheHitpoints = true;
-            updateTheScore = true;
+            //updateTheHitpoints = true;
+            //updateTheScore = true;
     
             if (IsServer)
             {
                 hasGameStarted.Value = false;
+
+                Score.Value = 0;
+                Hitpoints.Value = DEFAULT_HITPOINTS;
 
                 //Set our time remaining locally
                 timeRemaining = m_DelayedStartTime;

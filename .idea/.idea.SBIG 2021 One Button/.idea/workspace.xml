@@ -2,15 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ab7317d1-22e9-48ac-9535-d662808939c9" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/MovingTunnelPiece.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/MovingTunnelPiece.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/TunnelMovingScript.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Game/TunnelMovingScript.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SBIG 2021 One Button/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SBIG 2021 One Button/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/GameController.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/GameController.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/ServerShip.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/ServerShip.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/SpaceRock.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/SpaceRock.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/MyAssets/Textures/grid thing.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/Textures/grid thing.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/MyAssets/Textures/grid thing.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/Textures/grid thing.png.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/GameScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/GameScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/ClientManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/ClientManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/GameController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/GameController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ServerSpaceship.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ServerSpaceship.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ShipManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ShipManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/SpaceRock/NetworkedSpaceRock.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/SpaceRock/NetworkedSpaceRock.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,10 +66,13 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/Menus/GoToBootstrap.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Menus/SceneTransitionHandler.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Game/SpaceRock/NetworkedSpaceRock.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/Game/GameController.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Game/ClientManager.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ServerSpaceship.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ShipManager.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/TunnelPieceMover.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/MovingTunnelPiece.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/TunnelMovingScript.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/GameController.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ServerSpaceship.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1tDZqTTusv6hm7qP15AfkYMUvVZ" />
@@ -74,6 +81,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="Discover.Launch.Via.Unity" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -124,7 +132,7 @@
       <workItem from="1622327881865" duration="672000" />
       <workItem from="1622371287161" duration="973000" />
       <workItem from="1622385900554" duration="1622000" />
-      <workItem from="1622455248285" duration="55704000" />
+      <workItem from="1622455248285" duration="62793000" />
     </task>
     <servers />
   </component>

@@ -19,6 +19,8 @@ namespace Game.Ship
 
         public HashSet<ThrustEnum> currentThrusts = new HashSet<ThrustEnum>();
 
+        private GameController gc;
+
         //[SerializeField] private GameObject prefabPlayerShot;
 
         //[SerializeField] private GameObject playerShotSpawner;
@@ -58,6 +60,8 @@ namespace Game.Ship
                 Rigid.Value = rb;
                 Position.Value = rb.position;
                 Rotation.Value = rb.rotation;
+                gc = GameController.Singleton;
+                gc.isGameOver.OnValueChanged += OnGameOverChanged;
             }
         }
 
@@ -177,7 +181,9 @@ namespace Game.Ship
 
                 float verticalTilt = Mathf.Clamp(Rigid.Value.velocity.y / (maxSpeed / 2), -1, 1);
 
-                Rigid.Value.rotation = Quaternion.Euler(verticalTilt * -maxTilt, 0f, sideTilt * -maxTilt);
+                //Rigid.Value.rotation = Quaternion.Euler(verticalTilt * -maxTilt, 0f, sideTilt * -maxTilt);
+                
+                Rigid.Value.rotation = Quaternion.Euler(verticalTilt * -maxTilt, sideTilt * maxTilt, 0f);
 
                 Position.Value = Rigid.Value.position;
 
@@ -190,6 +196,23 @@ namespace Game.Ship
                 rb.MoveRotation(Rotation.Value.normalized);
             }
 
+        }
+        
+        
+        
+        private void OnGameOverChanged(bool wasOver, bool isNowOver)
+        {
+            if (isNowOver)
+            {
+                if (IsServer)
+                {
+                    currentThrusts.Clear();
+                }
+            }
+            else
+            {
+                
+            }
         }
 
     }

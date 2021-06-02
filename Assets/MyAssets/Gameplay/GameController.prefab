@@ -51,7 +51,7 @@ MonoBehaviour:
   theObjectPool: {fileID: 0}
   SpaceRockPrefab: {fileID: 3332950033486320138, guid: b848f8a42d4bf084e89672d4e76edfc5, type: 3}
   spawnerRadius: 4
-  spawnerZPosition: 30
+  spawnerZPosition: 50
   minWaveSize: 3
   maxWaveSize: 4
   minSpawnDelay: 0.1
@@ -65,7 +65,7 @@ MonoBehaviour:
     m_InternalValue: 0
   Hitpoints:
     m_InternalValue: 0
-  DEFAULT_HITPOINTS: 5
+  DEFAULT_HITPOINTS: 3
 --- !u!114 &6715725409949146864
 MonoBehaviour:
   m_ObjectHideFlags: 0
