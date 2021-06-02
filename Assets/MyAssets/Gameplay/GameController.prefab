@@ -50,7 +50,7 @@ MonoBehaviour:
   timerText: {fileID: 0}
   theObjectPool: {fileID: 0}
   SpaceRockPrefab: {fileID: 3332950033486320138, guid: b848f8a42d4bf084e89672d4e76edfc5, type: 3}
-  spawnerRadius: 4
+  spawnerRadius: 4.5
   spawnerZPosition: 50
   minWaveSize: 3
   maxWaveSize: 4

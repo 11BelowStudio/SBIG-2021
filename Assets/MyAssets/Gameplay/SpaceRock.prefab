@@ -130,8 +130,8 @@ MonoBehaviour:
     m_InternalValue: {x: 0, y: 0, z: 40}
   Rotation:
     m_InternalValue: {x: 0, y: 0, z: 0, w: 0}
-  minZSpeed: 100
-  maxZSpeed: 200
+  minZSpeed: 150
+  maxZSpeed: 175
 --- !u!114 &6696899827814021267
 MonoBehaviour:
   m_ObjectHideFlags: 0

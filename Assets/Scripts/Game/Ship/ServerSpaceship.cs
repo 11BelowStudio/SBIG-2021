@@ -21,6 +21,14 @@ namespace Game.Ship
 
         private GameController gc;
 
+        public AudioSource upThruster;
+
+        public AudioSource downThruster;
+
+        public AudioSource leftThruster;
+
+        public AudioSource rightThruster;
+
         //[SerializeField] private GameObject prefabPlayerShot;
 
         //[SerializeField] private GameObject playerShotSpawner;
@@ -75,12 +83,46 @@ namespace Game.Ship
         public void ApplyThrustToShipServerRPC(ThrustEnum t)
         {
             currentThrusts.Add(t);
+            switch (t)
+            {
+                case ThrustEnum.UP_THRUSTER:
+                    upThruster.Play();
+                    break;
+                case ThrustEnum.DOWN_THRUSTER:
+                    downThruster.Play();
+                    break;
+                case ThrustEnum.LEFT_THRUSTER:
+                    leftThruster.Play();
+                    break;
+                case ThrustEnum.RIGHT_THRUSTER:
+                    rightThruster.Play();
+                    break;
+                default:
+                    break;
+            }
         }
         
         [ServerRpc]
         public void RemoveThrustFromShipServerRPC(ThrustEnum t)
         {
             currentThrusts.Remove(t);
+            switch (t)
+            {
+                case ThrustEnum.UP_THRUSTER:
+                    upThruster.Stop();
+                    break;
+                case ThrustEnum.DOWN_THRUSTER:
+                    downThruster.Stop();
+                    break;
+                case ThrustEnum.LEFT_THRUSTER:
+                    leftThruster.Stop();
+                    break;
+                case ThrustEnum.RIGHT_THRUSTER:
+                    rightThruster.Stop();
+                    break;
+                default:
+                    break;
+            }
         }
 
         
@@ -207,6 +249,10 @@ namespace Game.Ship
                 if (IsServer)
                 {
                     currentThrusts.Clear();
+                    upThruster.Stop();
+                    downThruster.Stop();
+                    leftThruster.Stop();
+                    rightThruster.Stop();
                 }
             }
             else
