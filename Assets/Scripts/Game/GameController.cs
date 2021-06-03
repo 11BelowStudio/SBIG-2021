@@ -52,6 +52,9 @@ namespace Game
         public float minPointsBoxDelay;
         public float maxPointsBoxDelay;
 
+        [SerializeField]
+        private AudioSource pointsScoredAudioSource;
+
 
 
         [Header("Other stuff")]
@@ -236,6 +239,10 @@ namespace Game
                         {
                             isGameOver.Value = true;
                         }
+                    }
+                    else if (newValue > oldValue && m_ClientGameStarted)
+                    {
+                        pointsScoredAudioSource.Play();
                     }
                 };
             }
@@ -531,7 +538,7 @@ namespace Game
             {
                 if (!isGameOver.Value) // if the game isn't over yet
                 {
-                    Score.Value += Random.Range(0.125f, 1f); // score 1 point!
+                    Score.Value += Random.Range(0.06125f, 0.25f); // score anywhere between 1/16 and 1/4 point!
                 }
             }
         }
@@ -546,6 +553,10 @@ namespace Game
             }
             
             Score.Value += 3;
+            if (Hitpoints.Value < DEFAULT_HITPOINTS)
+            {
+                Hitpoints.Value += 1;
+            }
 
         }
 
@@ -578,7 +589,7 @@ namespace Game
             
             
         }
-        
+
         public void DisplayGameOverText(string message)
         {
 

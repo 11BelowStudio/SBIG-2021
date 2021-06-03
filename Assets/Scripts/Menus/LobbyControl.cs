@@ -97,8 +97,11 @@ public class LobbyControl : NetworkBehaviour
     /// </summary>
     private void UpdateAndCheckPlayersInLobby()
     {
+#if UNITY_EDITOR
         m_AllPlayersInLobby = m_ClientsInLobby.Count > 0;
-        //m_AllPlayersInLobby = m_ClientsInLobby.Count == 4;
+#else
+        m_AllPlayersInLobby = m_ClientsInLobby.Count == 4;
+#endif
 
         foreach (var clientLobbyStatus in m_ClientsInLobby)
         {

@@ -29,6 +29,8 @@ namespace Game.Ship
 
         public AudioSource rightThruster;
 
+        public AudioSource constantThruster;
+
         //[SerializeField] private GameObject prefabPlayerShot;
 
         //[SerializeField] private GameObject playerShotSpawner;
@@ -68,9 +70,10 @@ namespace Game.Ship
                 Rigid.Value = rb;
                 Position.Value = rb.position;
                 Rotation.Value = rb.rotation;
-                gc = GameController.Singleton;
-                gc.isGameOver.OnValueChanged += OnGameOverChanged;
             }
+            gc = GameController.Singleton;
+            gc.isGameOver.OnValueChanged += OnGameOverChanged;
+            gc.hasGameStarted.OnValueChanged += OnGameStartedChanged;
         }
 
         // Start is called before the first frame update
@@ -239,6 +242,14 @@ namespace Game.Ship
             }
 
         }
+
+        private void OnGameStartedChanged(bool hadItStarted, bool isItNowStarted)
+        {
+            if (isItNowStarted)
+            {
+                constantThruster.Play();
+            }
+        }
         
         
         
@@ -249,15 +260,12 @@ namespace Game.Ship
                 if (IsServer)
                 {
                     currentThrusts.Clear();
-                    upThruster.Stop();
-                    downThruster.Stop();
-                    leftThruster.Stop();
-                    rightThruster.Stop();
                 }
-            }
-            else
-            {
-                
+                upThruster.Stop();
+                downThruster.Stop();
+                leftThruster.Stop();
+                rightThruster.Stop();
+                constantThruster.Stop();
             }
         }
 

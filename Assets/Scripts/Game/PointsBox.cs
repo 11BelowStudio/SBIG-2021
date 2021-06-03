@@ -162,7 +162,7 @@ namespace Game
             if (IsServer)
             {
 
-                if (Rigid.Value.position.z <= -5)
+                if (Rigid.Value.position.z <= -10)
                 {
                     Yeet();
                 }
