@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ab7317d1-22e9-48ac-9535-d662808939c9" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.SBIG 2021 One Button/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SBIG 2021 One Button/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/GameController.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/GameController.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/PointsCube.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/PointsCube.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/ServerShip.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/ServerShip.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/SpaceRock.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/MyAssets/Gameplay/SpaceRock.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/StartMenu.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/StartMenu.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/TheLobby.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/TheLobby.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/GameController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/GameController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/PointsBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/PointsBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ServerSpaceship.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ServerSpaceship.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/SpaceRock/NetworkedSpaceRock.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/SpaceRock/NetworkedSpaceRock.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Menus/LobbyControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Menus/LobbyControl.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" afterDir="false" />
-    </list>
+    <list default="true" id="ab7317d1-22e9-48ac-9535-d662808939c9" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -139,7 +125,7 @@
       <workItem from="1622327881865" duration="672000" />
       <workItem from="1622371287161" duration="973000" />
       <workItem from="1622385900554" duration="1622000" />
-      <workItem from="1622455248285" duration="78305000" />
+      <workItem from="1622455248285" duration="78904000" />
     </task>
     <servers />
   </component>
