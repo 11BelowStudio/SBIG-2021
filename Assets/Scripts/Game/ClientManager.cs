@@ -1,4 +1,5 @@
-﻿using Game.Ship;
+﻿using System.Collections.Generic;
+using Game.Ship;
 using MLAPI;
 using MLAPI.NetworkVariable;
 using MLAPI.Messaging;
@@ -90,6 +91,10 @@ namespace Game
                 {
                     Send = new ClientRpcSendParams { TargetClientIds = new[] { OwnerClientId } }
                 };
+            }
+            else
+            {
+                NetworkManager.Singleton.OnClientDisconnectCallback += ForciblyDisconnected;
             }
 
             if (!GameController.Singleton)
@@ -225,9 +230,42 @@ namespace Game
             }
         }
 
- 
+        private void ForciblyDisconnected(ulong c)
+        {
+            if (IsServer)
+            {
+                return;
+            }
+            else if (c == OwnerClientId)
+            {
+                SceneTransitionHandler.sceneTransitionHandler.ExitAndLoadStartMenu();
+            }
+        }
+        
+        private void OnApplicationQuit()
+        {
 
-        
-        
+            if (!IsServer)
+            {
+                NetworkManager.Singleton.StopClient();
+            }
+            else
+            {
+                List<ulong> clients = new List<ulong>(NetworkManager.Singleton.ConnectedClients.Keys);
+                foreach (var c in clients)
+                {
+                    if (c != OwnerClientId)
+                    {
+                        NetworkManager.Singleton.DisconnectClient(c);
+                    }
+                }
+                NetworkManager.Singleton.StopServer();
+            }
+            NetworkManager.Shutdown();
+
+        }
+
+
+
     }
 }

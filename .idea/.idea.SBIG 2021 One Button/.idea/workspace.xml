@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ab7317d1-22e9-48ac-9535-d662808939c9" name="Default Changelist" comment="" />
+    <list default="true" id="ab7317d1-22e9-48ac-9535-d662808939c9" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SBIG 2021 One Button/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SBIG 2021 One Button/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/TheLobby.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/TheLobby.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/ClientManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/ClientManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Game/GameController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Game/GameController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Menus/LobbyControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Menus/LobbyControl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -60,12 +67,12 @@
       <option value="$PROJECT_DIR$/Assets/Scripts/Game/ICanBeYeetedFromTheScene.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Game/IAmYeetable.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Utilities/DestroyByTime.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/Game/ClientManager.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Game/PointsBox.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Game/SpaceRock/NetworkedSpaceRock.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Game/Ship/ServerSpaceship.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Menus/LobbyControl.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Game/GameController.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Game/ClientManager.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1tDZqTTusv6hm7qP15AfkYMUvVZ" />
@@ -125,7 +132,7 @@
       <workItem from="1622327881865" duration="672000" />
       <workItem from="1622371287161" duration="973000" />
       <workItem from="1622385900554" duration="1622000" />
-      <workItem from="1622455248285" duration="78904000" />
+      <workItem from="1622455248285" duration="80510000" />
     </task>
     <servers />
   </component>

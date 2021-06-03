@@ -599,7 +599,14 @@ namespace Game
         {
             if (IsServer)
             {
-                PleaseGoAwayThanks?.Invoke();
+                List<ulong> clients = new List<ulong>(NetworkManager.Singleton.ConnectedClients.Keys);
+                foreach (var c in clients)
+                {
+                    if (c != OwnerClientId)
+                    {
+                        NetworkManager.Singleton.DisconnectClient(c);
+                    }
+                }
                 NetworkManager.Singleton.StopServer();
             }
 
