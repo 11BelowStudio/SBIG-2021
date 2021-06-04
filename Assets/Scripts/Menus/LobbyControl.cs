@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MLAPI;
 using MLAPI.Messaging;
+using MLAPI.Transports.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,8 +32,16 @@ public class LobbyControl : NetworkBehaviour
         //We added this information to tell us if we are going to host a game or join an the game session
         if (isHosting)
         {
-            NetworkManager.Singleton.StartHost(); //Spin up the host
-            NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
+            SocketTasks sc = NetworkManager.Singleton.StartHost(); //Spin up the host
+            if (sc.Success)
+            {
+                NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
+            }
+            else
+            {
+                SceneTransitionHandler.sceneTransitionHandler.SwitchScene(SceneTransitionHandler.sceneTransitionHandler.DefaultMainMenu);
+            }
+            
         }
         else
         {
@@ -83,7 +92,7 @@ public class LobbyControl : NetworkBehaviour
         m_UserLobbyStatusText = string.Empty;
         foreach (var clientLobbyStatus in m_ClientsInLobby)
         {
-            m_UserLobbyStatusText += "Player_" + clientLobbyStatus.Key + "          ";
+            m_UserLobbyStatusText += "Player " + clientLobbyStatus.Key + "          ";
             if (clientLobbyStatus.Value)
                 m_UserLobbyStatusText += "(Ready)\n";
             else
@@ -128,10 +137,13 @@ public class LobbyControl : NetworkBehaviour
             {
                 if (m_ClientsInLobby.Count == 4)
                 {
-                    
+                    NetworkManager.Singleton.DisconnectClient(clientId);
                 }
-                m_ClientsInLobby.Add(clientId, false);
-                GenerateUserStatsForLobby();
+                else
+                {
+                    m_ClientsInLobby.Add(clientId, false);
+                    GenerateUserStatsForLobby();
+                }
             }
 
             UpdateAndCheckPlayersInLobby();
@@ -148,6 +160,11 @@ public class LobbyControl : NetworkBehaviour
     {
         if (IsServer)
         {
+            // forcibly disconnect a client if the lobby is full
+            if (m_ClientsInLobby.Count == 4)
+            {
+                NetworkManager.Singleton.DisconnectClient(clientId);
+            }
             if (!m_ClientsInLobby.ContainsKey(clientId)) m_ClientsInLobby.Add(clientId, false);
             GenerateUserStatsForLobby();
 

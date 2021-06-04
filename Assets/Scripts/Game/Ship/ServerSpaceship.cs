@@ -10,12 +10,12 @@ namespace Game.Ship
     public class ServerSpaceship: NetworkBehaviour
     { 
         
-        [SerializeField] private float maxSpeed = 10;
+        [SerializeField] private float maxSpeed = 30;
         [SerializeField] private float maxTilt = 25;
 
         [SerializeField] private float xyBounds = 5;
 
-        [SerializeField] private float speed = 100;
+        [SerializeField] private float speed = 300;
 
         public HashSet<ThrustEnum> currentThrusts = new HashSet<ThrustEnum>();
 

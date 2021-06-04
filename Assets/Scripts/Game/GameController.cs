@@ -24,6 +24,7 @@ namespace Game
         public TextMeshProUGUI scoreText;
         public TextMeshProUGUI hitpointsText;
         public TextMeshProUGUI gameOverText;
+        public TextMeshProUGUI newHighScoreText;
         public TextMeshProUGUI timerText;
 
         [Header("Spawner stuff")]
@@ -31,17 +32,25 @@ namespace Game
         public NetworkObjectPool theObjectPool;
         [SerializeField]
         private GameObject SpaceRockPrefab;
-        public float spawnerRadius;
-        public float spawnerZPosition;
+        [SerializeField]
+        private float spawnerRadius;
+        [SerializeField]
+        private float spawnerZPosition;
         
         private Coroutine waveSpawner;
-
-        public int minWaveSize;
-        public int maxWaveSize;
-        public float minSpawnDelay;
-        public float maxSpawnDelay;
-        public float minWaveDelay;
-        public float maxWaveDelay;
+        
+        [SerializeField]
+        private int minWaveSize;
+        [SerializeField]
+        private int maxWaveSize;
+        [SerializeField]
+        private float minSpawnDelay;
+        [SerializeField]
+        private float maxSpawnDelay;
+        [SerializeField]
+        private float minWaveDelay;
+        [SerializeField]
+        private float maxWaveDelay;
 
         [Header("Points box stuff")]
         [SerializeField]
@@ -49,8 +58,10 @@ namespace Game
 
         private Coroutine boxSpawner;
 
-        public float minPointsBoxDelay;
-        public float maxPointsBoxDelay;
+        [SerializeField]
+        private float minPointsBoxDelay;
+        [SerializeField]
+        private float maxPointsBoxDelay;
 
         [SerializeField]
         private AudioSource pointsScoredAudioSource;
@@ -60,7 +71,7 @@ namespace Game
         [Header("Other stuff")]
         [SerializeField]
         private GameObject explosionPrefab;
-        
+
         [SerializeField]
         [Tooltip("Time Remaining until the game starts")]
         private float m_DelayedStartTime = 5.0f;
@@ -92,6 +103,8 @@ namespace Game
         public NetworkVariableBool hasGameStarted { get; } = new NetworkVariableBool(false);
 
         public NetworkVariableBool isGameOver { get; } = new NetworkVariableBool(false);
+
+        public AudioSource gameMusicAudioSource;
 
         
 
@@ -175,6 +188,7 @@ namespace Game
             localHitpoints = DEFAULT_HITPOINTS;
             scoreText.SetText($"Score:\n0");
             hitpointsText.SetText($"Hitpoints:\n{localHitpoints}");
+            gameMusicAudioSource.Play();
             
         }
         
@@ -204,6 +218,10 @@ namespace Game
                 {
                     m_ClientStartCountdown = newValue;
                     Debug.LogFormat("Client side we were notified the start count down state was {0}", newValue);
+                    if (m_ClientStartCountdown)
+                    {
+                        gameMusicAudioSource.Play();
+                    }
                 };
 
                 hasGameStarted.OnValueChanged += (oldValue, newValue) =>
@@ -586,8 +604,15 @@ namespace Game
         {
             hitpointsText.SetText("DED");
             gameOverText.gameObject.SetActive(true);
-            
-            
+            gameMusicAudioSource.Stop();
+
+            float lastHighScore = PlayerPrefs.GetInt("Highscore", 0);
+            if (localScore > lastHighScore)
+            {
+                PlayerPrefs.SetInt("Highscore",localScore);
+            }
+
+
         }
 
         public void DisplayGameOverText(string message)

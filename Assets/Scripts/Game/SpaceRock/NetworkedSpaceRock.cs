@@ -43,9 +43,9 @@ namespace Game.SpaceRock
 
         private Rigidbody rb;
 
-        public float minZSpeed = 100;
+        public float minZSpeed = 20;
 
-        public float maxZSpeed = 500;
+        public float maxZSpeed = 75;
 
         private static float zRange;
 
