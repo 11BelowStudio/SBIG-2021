@@ -320,15 +320,16 @@ MonoBehaviour:
   maxPointsBoxDelay: 10
   pointsScoredAudioSource: {fileID: 2707439903755510395}
   explosionPrefab: {fileID: 4153581380243878057, guid: fdb9e34379aaf894badab30f6102805a, type: 3}
-  m_DelayedStartTime: 5
-  m_TickPeriodic:
+  delayedStartTime: 5
+  tickPeriodic:
     m_InternalValue: 0.2
   gameMusicAudioSource: {fileID: 330551142132631203}
+  gracePeriodLength: 3
   Score:
     m_InternalValue: 0
   Hitpoints:
     m_InternalValue: 0
-  DEFAULT_HITPOINTS: 5
+  DEFAULT_HITPOINTS: 3
 --- !u!114 &6715725409949146864
 MonoBehaviour:
   m_ObjectHideFlags: 0

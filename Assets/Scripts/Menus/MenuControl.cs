@@ -21,6 +21,9 @@ public class MenuControl : MonoBehaviour
 
     public void Awake()
     {
+#if UNITY_EDITOR
+        PlayerPrefs.SetInt("Highscore",5);
+#endif
         highScoreText.SetText($"High Score:\n{PlayerPrefs.GetInt("Highscore",5)}");
         // Update the current HostNameInput with whatever we have set in the NetworkConfig as default
         var unetTransport = (UNetTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport;
@@ -43,6 +46,7 @@ public class MenuControl : MonoBehaviour
             musicPlayer.clip = fullGameTheme;
             musicPlayer.Play();
         }
+
     }
 
 

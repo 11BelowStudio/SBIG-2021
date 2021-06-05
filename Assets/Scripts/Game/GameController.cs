@@ -422,7 +422,7 @@ namespace Game
 
                 if (timeRemaining > 0.1f)
                 {
-                    timerText.SetText("{0}", Mathf.FloorToInt(timeRemaining));
+                    timerText.SetText("Game starts in {0}\nHold spacebar to move.", Mathf.FloorToInt(timeRemaining));
                 }
             }
         }

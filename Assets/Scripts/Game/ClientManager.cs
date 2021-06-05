@@ -27,6 +27,8 @@ namespace Game
         private bool hasGameStarted;
 
         private bool isGameOver;
+
+        
         
         public void Start()
         {
@@ -146,6 +148,8 @@ namespace Game
                     break;
                 }
             }
+
+            
         }
         private void InGameUpdate()
         {

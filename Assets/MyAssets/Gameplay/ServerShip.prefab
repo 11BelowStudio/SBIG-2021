@@ -467,10 +467,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 507f3e6fd7c84959962198480ffa9248, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 30
-  maxTilt: 25
+  maxSpeed: 100
+  maxTilt: 50
   xyBounds: 5
-  speed: 100
+  speed: 200
   upThruster: {fileID: 4484667719457385744}
   downThruster: {fileID: 1068741946064985028}
   leftThruster: {fileID: 5171549162979668503}
