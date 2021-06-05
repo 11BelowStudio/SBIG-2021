@@ -31,6 +31,8 @@ namespace Game.Ship
 
         public AudioSource constantThruster;
 
+        public GameObject explosionGoesHere;
+
         //[SerializeField] private GameObject prefabPlayerShot;
 
         //[SerializeField] private GameObject playerShotSpawner;
@@ -248,6 +250,20 @@ namespace Game.Ship
             if (isItNowStarted)
             {
                 constantThruster.Play();
+            }
+        }
+
+        public void GoBackToTheMiddle()
+        {
+            if (!IsServer)
+            {
+                return;
+            }
+            else
+            {
+                // yote away from current position
+                Rigid.Value.velocity = Vector3.zero;
+                Rigid.Value.AddForce(transform.position *= -0.25f, ForceMode.Impulse);
             }
         }
         

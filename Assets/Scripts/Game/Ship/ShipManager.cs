@@ -21,38 +21,13 @@ namespace Game.Ship
             WritePermission = NetworkVariablePermission.ServerOnly,
             ReadPermission = NetworkVariablePermission.Everyone
         });
-
-        public void Start()
-        {
-            
-        }
+        
 
         public override void NetworkStart()
         {
             Spaceship.Value = FindObjectOfType<ServerSpaceship>();
         }
-
-        public void Update()
-        {
-            if (IsServer)
-            {
-                UpdateServer();    
-            }
-
-            if (IsClient)
-            {
-                UpdateClient();
-            }
-        }
-
-        private void UpdateServer()
-        {
-            
-        }
-
-        private void UpdateClient()
-        {
-        }
+        
 
         [ServerRpc]
         public void ThrustRequestServerRpc(ThrustEnum t)

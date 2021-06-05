@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Ship;
 using UnityEngine;
 using MLAPI;
 using MLAPI.Messaging;
@@ -155,9 +156,14 @@ namespace Game.SpaceRock
             
             startPos += new Vector3(0, 0, startZ);
             
-            //Debug.Log($"Moved start: {startPos}");
+            CreatedFromPoolAtPosition(startPos);
+        }
+
+        public void CreatedFromPoolAtPosition(Vector3 position)
+        {
+            Assert.IsTrue(IsServer);
             
-            transform.position = startPos;
+            transform.position = position;
             
             float zForce = -((Random.value * zRange) + minZSpeed);
 
@@ -179,7 +185,7 @@ namespace Game.SpaceRock
                 radialDist * Mathf.Cos(polarAngle)
             );
 
-            Position.Value = startPos;
+            Position.Value = position;
 
             Rotation.Value = Rigid.Value.rotation;
             
@@ -221,7 +227,8 @@ namespace Game.SpaceRock
             }
             if (other.tag.Equals("Player"))
             {
-                gameController.ShipHit(other.ClosestPoint(transform.position));
+                //gameController.ShipHit(other.ClosestPoint(transform.position));
+                gameController.ShipHit();
                 //Yeet(false);
                 foreach (IAmYeetable yeetThisToo in FindObjectsOfType<NetworkedSpaceRock>())
                 {

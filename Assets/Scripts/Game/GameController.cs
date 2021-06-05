@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Game.Ship;
 using Game.SpaceRock;
 using MLAPI;
@@ -11,6 +12,7 @@ using MLAPI.NetworkVariable.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Serialization;
 using Utilities;
 using Random = UnityEngine.Random;
 
@@ -72,30 +74,30 @@ namespace Game
         [SerializeField]
         private GameObject explosionPrefab;
 
+        [FormerlySerializedAs("m_DelayedStartTime")]
         [SerializeField]
         [Tooltip("Time Remaining until the game starts")]
-        private float m_DelayedStartTime = 5.0f;
+        private float delayedStartTime = 5.0f;
 
         private float timeRemaining;
 
-        [SerializeField]
-        private NetworkVariableFloat m_TickPeriodic = new NetworkVariableFloat(0.2f);
+        [FormerlySerializedAs("m_TickPeriodic")] [SerializeField]
+        private NetworkVariableFloat tickPeriodic = new NetworkVariableFloat(0.2f);
         
         //These help to simplify checking server vs client
         //[NSS]: This would also be a great place to add a state machine and use networked vars for this
-        private bool m_ClientGameOver;
-        private bool m_ClientGameStarted;
-        private bool m_ClientStartCountdown;
+        private bool clientGameOver;
+        private bool clientGameStarted;
+        private bool clientStartCountdown;
 
-        private NetworkVariableBool m_CountdownStarted = new NetworkVariableBool(false);
+        private NetworkVariableBool countdownStarted = new NetworkVariableBool(false);
 
-        private float m_NextTick;
+        private float nextTick;
 
         // the timer should only be synced at the beginning
         // and then let the client to update it in a predictive manner
-        private NetworkVariableFloat m_ReplicatedTimeRemaining = new NetworkVariableFloat();
-        private GameObject m_Saucer;
-        
+        private NetworkVariableFloat replicatedTimeRemaining = new NetworkVariableFloat();
+
         //private List<NetworkedSpaceRock> spaceRocks = new List<NetworkedSpaceRock>();
 
         public static GameController Singleton { get; private set; }
@@ -106,6 +108,11 @@ namespace Game
 
         public AudioSource gameMusicAudioSource;
 
+        private bool isInGracePeriod = false;
+
+        [SerializeField]
+        private float gracePeriodLength = 3f;
+
         
 
         public NetworkVariableFloat Score = new NetworkVariableFloat(new NetworkVariableSettings
@@ -115,31 +122,21 @@ namespace Game
         },0);
 
         private int localScore = 0;
-
-        private bool updateTheScore = false;
+        
 
         public NetworkVariableInt Hitpoints = new NetworkVariableInt(new NetworkVariableSettings
         {
             ReadPermission = NetworkVariablePermission.Everyone,
             WritePermission = NetworkVariablePermission.ServerOnly
         });
-
-        private bool updateTheHitpoints = false;
+        
 
         public int DEFAULT_HITPOINTS;
 
         private int localHitpoints;
         
-        /*
-        public NetworkVariable<ISet<ThrustEnum>> AllThrusts = new NetworkVariable<ISet<ThrustEnum>>(
-            new NetworkVariableSettings
-            {
-                ReadPermission = NetworkVariablePermission.ServerOnly,
-                WritePermission = NetworkVariablePermission.ServerOnly
-            },
-            new HashSet<ThrustEnum>());
-            */
-        private HashSet<ThrustEnum> allThrusts = new HashSet<ThrustEnum>((ThrustEnum[]) Enum.GetValues(typeof(ThrustEnum)));
+
+        private List<ThrustEnum> allThrusts = new List<ThrustEnum>((ThrustEnum[]) Enum.GetValues(typeof(ThrustEnum)));
 
         
         public NetworkDictionary<ThrustEnum, ClientManager> Clients =
@@ -151,7 +148,7 @@ namespace Game
                 },
                 new Dictionary<ThrustEnum, ClientManager>());
 
-        private Dictionary<ThrustEnum, ClientManager> clients = new Dictionary<ThrustEnum, ClientManager>();
+        private ServerSpaceship theSpaceship;
 
         /// <summary>
         ///     Awake
@@ -174,15 +171,26 @@ namespace Game
                 Hitpoints.Value = DEFAULT_HITPOINTS;
 
                 //Set our time remaining locally
-                timeRemaining = m_DelayedStartTime;
+                timeRemaining = delayedStartTime;
 
                 //Set for server side
-                m_ReplicatedTimeRemaining.Value = m_DelayedStartTime;
+                replicatedTimeRemaining.Value = delayedStartTime;
+
+                theSpaceship = FindObjectOfType<ServerSpaceship>();
+
+                IList<ClientManager> allClients = FindObjectsOfType<ClientManager>();
+                
+                RandomUtilities.Shuffle(allClients);
+                foreach (var c in allClients)
+                {
+                    AddPlayer(c);
+                }
+
             }
             else
             {
                 //We do a check for the client side value upon instantiating the class (should be zero)
-                Debug.LogFormat("Client side we started with a timer value of {0}", m_ReplicatedTimeRemaining.Value);
+                Debug.LogFormat("Client side we started with a timer value of {0}", replicatedTimeRemaining.Value);
             }
 
             localHitpoints = DEFAULT_HITPOINTS;
@@ -196,11 +204,11 @@ namespace Game
         {
             if (IsClient)
             {
-                m_ClientGameOver = false;
-                m_ClientStartCountdown = false;
-                m_ClientGameStarted = false;
+                clientGameOver = false;
+                clientStartCountdown = false;
+                clientGameStarted = false;
 
-                m_ReplicatedTimeRemaining.OnValueChanged += (oldAmount, newAmount) =>
+                replicatedTimeRemaining.OnValueChanged += (oldAmount, newAmount) =>
                 {
                     // See the ShouldStartCountDown method for when the server updates the value
                     if (timeRemaining == 0)
@@ -210,15 +218,15 @@ namespace Game
                     }
                     else
                     {
-                        Debug.LogFormat("Client side we got an update for a timer value of {0} when we shouldn't", m_ReplicatedTimeRemaining.Value);
+                        Debug.LogFormat("Client side we got an update for a timer value of {0} when we shouldn't", replicatedTimeRemaining.Value);
                     }
                 };
 
-                m_CountdownStarted.OnValueChanged += (oldValue, newValue) =>
+                countdownStarted.OnValueChanged += (oldValue, newValue) =>
                 {
-                    m_ClientStartCountdown = newValue;
+                    clientStartCountdown = newValue;
                     Debug.LogFormat("Client side we were notified the start count down state was {0}", newValue);
-                    if (m_ClientStartCountdown)
+                    if (clientStartCountdown)
                     {
                         gameMusicAudioSource.Play();
                     }
@@ -226,14 +234,14 @@ namespace Game
 
                 hasGameStarted.OnValueChanged += (oldValue, newValue) =>
                 {
-                    m_ClientGameStarted = newValue;
-                    timerText.gameObject.SetActive(!m_ClientGameStarted);
+                    clientGameStarted = newValue;
+                    timerText.gameObject.SetActive(!clientGameStarted);
                     Debug.LogFormat("Client side we were notified the game started state was {0}", newValue);
                 };
 
                 isGameOver.OnValueChanged += (oldValue, newValue) =>
                 {
-                    m_ClientGameOver = newValue;
+                    clientGameOver = newValue;
                     Debug.LogFormat("Client side we were notified the game over state was {0}", newValue);
                     if (newValue == true)
                     {
@@ -258,7 +266,7 @@ namespace Game
                             isGameOver.Value = true;
                         }
                     }
-                    else if (newValue > oldValue && m_ClientGameStarted)
+                    else if (newValue > oldValue && clientGameStarted)
                     {
                         pointsScoredAudioSource.Play();
                     }
@@ -289,7 +297,7 @@ namespace Game
             }
 
             //Update game timer (if the game hasn't started)
-            if (m_ClientGameStarted)
+            if (clientGameStarted)
             {
                 hitpointsText.SetText($"Hitpoints:\n{localHitpoints}");
                 scoreText.SetText($"Score:\n{localScore}");
@@ -337,22 +345,22 @@ namespace Game
             if (HasGameStarted()) return false;
             if (IsServer)
             {
-                m_CountdownStarted.Value = SceneTransitionHandler.sceneTransitionHandler.AllClientsAreLoaded();
+                countdownStarted.Value = SceneTransitionHandler.sceneTransitionHandler.AllClientsAreLoaded();
 
                 //While we are counting down, continually set the m_ReplicatedTimeRemaining.Value (client should only receive the update once)
-                if (m_CountdownStarted.Value && m_ReplicatedTimeRemaining.Settings.SendTickrate != -1)
+                if (countdownStarted.Value && replicatedTimeRemaining.Settings.SendTickrate != -1)
                 {
                     //Now we can specify that we only want this to be sent once
-                    m_ReplicatedTimeRemaining.Settings.SendTickrate = -1;
+                    replicatedTimeRemaining.Settings.SendTickrate = -1;
 
                     //Now set the value for our one time m_ReplicatedTimeRemaining networked var for clients to get updated once
-                    m_ReplicatedTimeRemaining.Value = m_DelayedStartTime;
+                    replicatedTimeRemaining.Value = delayedStartTime;
                 }
 
-                return m_CountdownStarted.Value;
+                return countdownStarted.Value;
             }
 
-            return m_ClientStartCountdown;
+            return clientStartCountdown;
         }
 
         /// <summary>
@@ -366,7 +374,7 @@ namespace Game
             {
                 return isGameOver.Value;
             }
-            return m_ClientGameOver;
+            return clientGameOver;
         }
         
         /// <summary>
@@ -381,7 +389,7 @@ namespace Game
                 return hasGameStarted.Value;
             }
 
-            return m_ClientGameStarted;
+            return clientGameStarted;
         }
         
         /// <summary>
@@ -392,7 +400,10 @@ namespace Game
         /// <returns> True when m_HasGameStared is set </returns>
         private void UpdateGameTimer()
         {
-            if (!ShouldStartCountDown()) return;
+            if (!ShouldStartCountDown())
+            {
+                return;
+            }
             if (!HasGameStarted() && timeRemaining > 0.0f)
             {
                 timeRemaining -= Time.deltaTime;
@@ -406,7 +417,7 @@ namespace Game
                         OnGameStarted();
                     }
 
-                    m_ReplicatedTimeRemaining.Value = timeRemaining;
+                    replicatedTimeRemaining.Value = timeRemaining;
                 }
 
                 if (timeRemaining > 0.1f)
@@ -446,19 +457,25 @@ namespace Game
                 //Debug.Log(currentWaveSize);
                 for (int i = 0; i < currentWaveSize; i++)
                 {
+
+                    yield return new WaitWhile(() => isInGracePeriod);
+                    
                     GameObject theNewSpaceRock = theObjectPool.GetNetworkObject(SpaceRockPrefab);
 
-                    //Vector3 randomSphere = Random.insideUnitSphere * spawnerRadius;
 
-                    //randomSphere += new Vector3(0, 0, spawnerZPosition);
+                    if (Random.value < 0.1f) // 10% chance of anti-camper space rocks appearing
+                    {
+                        Debug.Log("RIGHT THAT'S IT");
+                        Vector3 spaceshipPos = theSpaceship.transform.position;
+                        theNewSpaceRock.GetComponent<NetworkedSpaceRock>().CreatedFromPoolAtPosition(
+                            new Vector3(spaceshipPos.x, spaceshipPos.y, spawnerZPosition)
+                        );
+                    }
+                    else // space rock at a random position who cares
+                    {
+                        theNewSpaceRock.GetComponent<NetworkedSpaceRock>().CreatedFromPool(spawnerZPosition, spawnerRadius);
+                    }
 
-                    //Vector2 randomPos2D = Random.insideUnitCircle * spawnerRadius;
-
-                    // randomPos3D = new Vector3(randomPos2D.x, randomPos2D.y, spawnerZPosition);
-
-                    //theNewSpaceRock.GetComponent<NetworkedSpaceRock>().CreatedFromPool(randomPos3D);
-                    theNewSpaceRock.GetComponent<NetworkedSpaceRock>().CreatedFromPool(spawnerZPosition, spawnerRadius);
-                    
                     theNewSpaceRock.GetComponent<NetworkObject>().Spawn(null, true);
 
                     yield return new WaitForSeconds(Random.Range(minSpawnDelay, maxSpawnDelay));
@@ -501,11 +518,14 @@ namespace Game
                 return;
             }
 
-            //ThrustEnum useThis = ThrustEnum.UP_THRUSTER;
 
-            //bool foundOne = false;
+            //RandomUtilities.Shuffle(allThrusts); // I do a little trolling.
+
+            //IList<ThrustEnum> thrustList =
+            //    RandomUtilities.ShuffleCopy(new List<ThrustEnum>((ThrustEnum[]) Enum.GetValues(typeof(ThrustEnum))));
             
-            foreach (ThrustEnum t in Enum.GetValues(typeof(ThrustEnum)))
+            
+            foreach (ThrustEnum t in Enum.GetValues(typeof(ThrustEnum)))//thrustList) //allThrusts) //Enum.GetValues(typeof(ThrustEnum))
             {
                 if (!Clients.ContainsKey(t))
                 {
@@ -578,18 +598,37 @@ namespace Game
 
         }
 
-        public void ShipHit(Vector3 hitHere)
+        /// <summary>
+        /// Basically gives a grace period after getting hit by a space rock
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable gracePeriodCoroutine()
+        {
+            if (!isInGracePeriod)
+            {
+                isInGracePeriod = true;
+                yield return new WaitForSeconds(gracePeriodLength);
+                isInGracePeriod = false;
+            }
+
+            yield break;
+        }
+
+        public void ShipHit()
         {
             Assert.IsTrue(NetworkManager.Singleton.IsServer);
-            if (isGameOver.Value)
+            if (isGameOver.Value || isInGracePeriod)
             {
                 return;
             }
             Hitpoints.Value -= 1;
+            theSpaceship.GoBackToTheMiddle();
+
+            StartCoroutine(gracePeriodCoroutine().GetEnumerator());
 
             foreach (var client in Clients.Values)
             {
-                client.gc.SpawnExplosionClientRPC(hitHere);
+                client.gc.SpawnExplosionClientRPC(theSpaceship.explosionGoesHere.transform.position);
             }
             
         }

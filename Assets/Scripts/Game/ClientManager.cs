@@ -117,7 +117,7 @@ namespace Game
         private void SubscribeToDelegatesAndUpdateValues()
         {
             gc = GameController.Singleton;
-            gc.AddPlayer(this);
+            //gc.AddPlayer(this);
             gc.hasGameStarted.OnValueChanged += OnGameStartedChanged;
             gc.isGameOver.OnValueChanged += OnGameOverChanged;
             GameController.PleaseGoAwayThanks += ForceQuit;
@@ -150,20 +150,10 @@ namespace Game
         private void InGameUpdate()
         {
 
-            if (IsServer)
-            {
-                UpdateServer();    
-            }
-
             if (IsClient)
             {
                 UpdateClient();
             }
-        }
-
-        private void UpdateServer()
-        {
-            
         }
 
         private void UpdateClient()
@@ -176,6 +166,7 @@ namespace Game
                 if (isGameOver)
                 {
                     Quit();
+                    SceneTransitionHandler.sceneTransitionHandler.ExitAndLoadStartMenu();
                 }
                 else if (hasGameStarted)
                 {
@@ -195,6 +186,7 @@ namespace Game
         {
             GameController.PleaseGoAwayThanks -= ForceQuit;
             gc.ExitGame();
+            SceneTransitionHandler.sceneTransitionHandler.ExitAndLoadStartMenu();
         }
 
         private void ForceQuit()
@@ -220,15 +212,7 @@ namespace Game
                 sm.ThrustStopRequestServerRPC(Thruster.Value);
             }
         }
-
-        [ClientRpc]
-        public void FeckOffClientRPC()
-        {
-            if (!IsServer)
-            {
-                gc.ExitGame();
-            }
-        }
+        
 
         private void ForciblyDisconnected(ulong c)
         {

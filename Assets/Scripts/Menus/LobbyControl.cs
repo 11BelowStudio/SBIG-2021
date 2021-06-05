@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using MLAPI;
 using MLAPI.Messaging;
 using MLAPI.Transports.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class LobbyControl : NetworkBehaviour
@@ -13,13 +15,13 @@ public class LobbyControl : NetworkBehaviour
     [HideInInspector]
     public static bool isHosting;
 
-    [SerializeField]
-    private string m_InGameSceneName = "GameScene";
+    [FormerlySerializedAs("m_InGameSceneName")] [SerializeField]
+    private string inGameSceneName = "GameScene";
     public TextMeshProUGUI LobbyText;
-    private bool m_AllPlayersInLobby;
+    private bool areAllPlayersInLobby;
 
-    private Dictionary<ulong, bool> m_ClientsInLobby;
-    private string m_UserLobbyStatusText;
+    private Dictionary<ulong, bool> clientsInLobby;
+    private string userLobbyStatusText;
 
     /// <summary>
     ///     Awake
@@ -27,13 +29,24 @@ public class LobbyControl : NetworkBehaviour
     /// </summary>
     private void Awake()
     {
-        m_ClientsInLobby = new Dictionary<ulong, bool>();
+        clientsInLobby = new Dictionary<ulong, bool>();
 
         //We added this information to tell us if we are going to host a game or join an the game session
         if (isHosting)
         {
             SocketTasks sc = NetworkManager.Singleton.StartHost(); //Spin up the host
-            if (sc.Success)
+
+            bool succ = true;
+            foreach (var task in sc.Tasks)
+            {
+                if (task.SocketError != SocketError.Success)
+                {
+                    succ = false;
+                    break;
+                }
+            }
+            
+            if(succ)
             {
                 NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
             }
@@ -51,13 +64,13 @@ public class LobbyControl : NetworkBehaviour
         if (NetworkManager.Singleton.IsListening)
         {
             //Always add ourselves to the list at first
-            m_ClientsInLobby.Add(NetworkManager.Singleton.LocalClientId, false);
+            clientsInLobby.Add(NetworkManager.Singleton.LocalClientId, false);
 
             //If we are hosting, then handle the server side for detecting when clients have connected
             //and when their lobby scenes are finished loading.
             if (IsServer)
             {
-                m_AllPlayersInLobby = false;
+                areAllPlayersInLobby = false;
 
                 //Server will be notified when a client connects
                 NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedCallback;
@@ -73,13 +86,16 @@ public class LobbyControl : NetworkBehaviour
 
     private void ApprovalCheck(byte[] connectionData, ulong clientId, MLAPI.NetworkManager.ConnectionApprovedDelegate callback)
     {
-        bool canIConnect = (m_ClientsInLobby.Count < 4);
+        bool canIConnect = (clientsInLobby.Count < 4);
         callback(canIConnect, null, canIConnect, null, null);
     }
 
     private void OnGUI()
     {
-        if (LobbyText != null) LobbyText.text = m_UserLobbyStatusText;
+        if (LobbyText != null)
+        {
+            LobbyText.text = userLobbyStatusText;
+        }
     }
 
     /// <summary>
@@ -89,14 +105,18 @@ public class LobbyControl : NetworkBehaviour
     /// </summary>
     private void GenerateUserStatsForLobby()
     {
-        m_UserLobbyStatusText = string.Empty;
-        foreach (var clientLobbyStatus in m_ClientsInLobby)
+        userLobbyStatusText = string.Empty;
+        foreach (var clientLobbyStatus in clientsInLobby)
         {
-            m_UserLobbyStatusText += "Player " + clientLobbyStatus.Key + "          ";
+            userLobbyStatusText += "Player " + clientLobbyStatus.Key + "          ";
             if (clientLobbyStatus.Value)
-                m_UserLobbyStatusText += "(Ready)\n";
+            {
+                userLobbyStatusText += "(Ready)\n";
+            }
             else
-                m_UserLobbyStatusText += "(Not Ready)\n";
+            {
+                userLobbyStatusText += "(Not Ready)\n";
+            }
         }
     }
 
@@ -107,18 +127,20 @@ public class LobbyControl : NetworkBehaviour
     private void UpdateAndCheckPlayersInLobby()
     {
 #if UNITY_EDITOR
-        m_AllPlayersInLobby = m_ClientsInLobby.Count > 0;
+        areAllPlayersInLobby = clientsInLobby.Count > 0;
 #else
-        m_AllPlayersInLobby = m_ClientsInLobby.Count == 4;
+        areAllPlayersInLobby = clientsInLobby.Count == 4;
 #endif
 
-        foreach (var clientLobbyStatus in m_ClientsInLobby)
+        foreach (var clientLobbyStatus in clientsInLobby)
         {
             SendClientReadyStatusUpdatesClientRpc(clientLobbyStatus.Key, clientLobbyStatus.Value);
             if (!NetworkManager.Singleton.ConnectedClients.ContainsKey(clientLobbyStatus.Key))
+            {
 
                 //If some clients are still loading into the lobby scene then this is false
-                m_AllPlayersInLobby = false;
+                areAllPlayersInLobby = false;
+            }
         }
 
         CheckForAllPlayersReady();
@@ -133,15 +155,15 @@ public class LobbyControl : NetworkBehaviour
     {
         if (IsServer)
         {
-            if (!m_ClientsInLobby.ContainsKey(clientId))
+            if (!clientsInLobby.ContainsKey(clientId))
             {
-                if (m_ClientsInLobby.Count == 4)
+                if (clientsInLobby.Count == 4)
                 {
                     NetworkManager.Singleton.DisconnectClient(clientId);
                 }
                 else
                 {
-                    m_ClientsInLobby.Add(clientId, false);
+                    clientsInLobby.Add(clientId, false);
                     GenerateUserStatsForLobby();
                 }
             }
@@ -161,11 +183,15 @@ public class LobbyControl : NetworkBehaviour
         if (IsServer)
         {
             // forcibly disconnect a client if the lobby is full
-            if (m_ClientsInLobby.Count == 4)
+            if (clientsInLobby.Count == 4)
             {
                 NetworkManager.Singleton.DisconnectClient(clientId);
             }
-            if (!m_ClientsInLobby.ContainsKey(clientId)) m_ClientsInLobby.Add(clientId, false);
+
+            if (!clientsInLobby.ContainsKey(clientId))
+            {
+                clientsInLobby.Add(clientId, false);
+            }
             GenerateUserStatsForLobby();
 
             UpdateAndCheckPlayersInLobby();
@@ -184,10 +210,14 @@ public class LobbyControl : NetworkBehaviour
     {
         if (!IsServer)
         {
-            if (!m_ClientsInLobby.ContainsKey(clientId))
-                m_ClientsInLobby.Add(clientId, isReady);
+            if (!clientsInLobby.ContainsKey(clientId))
+            {
+                clientsInLobby.Add(clientId, isReady);
+            }
             else
-                m_ClientsInLobby[clientId] = isReady;
+            {
+                clientsInLobby[clientId] = isReady;
+            }
             GenerateUserStatsForLobby();
         }
     }
@@ -198,14 +228,18 @@ public class LobbyControl : NetworkBehaviour
     /// </summary>
     private void CheckForAllPlayersReady()
     {
-        if (m_AllPlayersInLobby)
+        if (areAllPlayersInLobby)
         {
             var allPlayersAreReady = true;
-            foreach (var clientLobbyStatus in m_ClientsInLobby)
+            foreach (var clientLobbyStatus in clientsInLobby)
+            {
                 if (!clientLobbyStatus.Value)
-
+                {
                     //If some clients are still loading into the lobby scene then this is false
                     allPlayersAreReady = false;
+                }
+            }
+            
 
             //Only if all players are ready
             if (allPlayersAreReady)
@@ -217,7 +251,7 @@ public class LobbyControl : NetworkBehaviour
                 SceneTransitionHandler.sceneTransitionHandler.OnClientLoadedScene -= ClientLoadedScene;
 
                 //Transition to the ingame scene
-                SceneTransitionHandler.sceneTransitionHandler.SwitchScene(m_InGameSceneName);
+                SceneTransitionHandler.sceneTransitionHandler.SwitchScene(inGameSceneName);
             }
         }
     }
@@ -230,12 +264,12 @@ public class LobbyControl : NetworkBehaviour
     {
         if (IsServer)
         {
-            m_ClientsInLobby[NetworkManager.Singleton.ServerClientId] = true;
+            clientsInLobby[NetworkManager.Singleton.ServerClientId] = true;
             UpdateAndCheckPlayersInLobby();
         }
         else
         {
-            m_ClientsInLobby[NetworkManager.Singleton.LocalClientId] = true;
+            clientsInLobby[NetworkManager.Singleton.LocalClientId] = true;
             OnClientIsReadyServerRpc(NetworkManager.Singleton.LocalClientId);
         }
 
@@ -250,9 +284,9 @@ public class LobbyControl : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void OnClientIsReadyServerRpc(ulong clientid)
     {
-        if (m_ClientsInLobby.ContainsKey(clientid))
+        if (clientsInLobby.ContainsKey(clientid))
         {
-            m_ClientsInLobby[clientid] = true;
+            clientsInLobby[clientid] = true;
             UpdateAndCheckPlayersInLobby();
             GenerateUserStatsForLobby();
         }

@@ -127,6 +127,36 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &719744193346476417
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2396293357613410944}
+  m_Layer: 0
+  m_Name: Explosion goes here.
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2396293357613410944
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 719744193346476417}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.1244, z: 0.9913}
+  m_LocalScale: {x: 0.83333325, y: 0.83333325, z: 0.83333325}
+  m_Children: []
+  m_Father: {fileID: 466193471335400689}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1213447777772602276
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,6 +356,7 @@ Transform:
   - {fileID: 3462596187218490730}
   - {fileID: 4008330859979630010}
   - {fileID: 4419623447851182730}
+  - {fileID: 2396293357613410944}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -369,7 +400,7 @@ Rigidbody:
   m_GameObject: {fileID: 4842832433727734471}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0.01
+  m_Drag: 0.1
   m_AngularDrag: 0.05
   m_UseGravity: 0
   m_IsKinematic: 0
@@ -436,7 +467,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 507f3e6fd7c84959962198480ffa9248, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 20
+  maxSpeed: 30
   maxTilt: 25
   xyBounds: 5
   speed: 100
@@ -445,6 +476,7 @@ MonoBehaviour:
   leftThruster: {fileID: 5171549162979668503}
   rightThruster: {fileID: 2973290281285065710}
   constantThruster: {fileID: 1425051701072469381}
+  explosionGoesHere: {fileID: 719744193346476417}
   Rigid:
     m_InternalValue: {fileID: 7690357684576917884}
   Position:
