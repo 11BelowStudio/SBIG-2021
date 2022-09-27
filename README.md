@@ -1,6 +1,6 @@
 # Inconvenient Space Rocks 2 - A Dysfunctional, Uncooperative space piloting game!
 
-By 11BelowStudio, 2021. Made for the 2021 'So Bad It's Good' Jam.
+By 11BelowStudio (Rachel Lowe), 2021. Made for the 2021 'So Bad It's Good' Jam.
 
 https://11belowstudio.itch.io/inconvenient-space-rocks-2
 
